@@ -72,6 +72,8 @@ class order extends CI_Controller
 	function edit($OrderFormID)
 	{
 		$data				=	$this->m_order->view_single($OrderFormID);
+
+        //echo '<pre>';print_r($data);exit;
 		$data['Items']		=	$this->m_order->view_order_item($OrderFormID);
 		foreach($data['Items'] as $key => $Item)
 		{

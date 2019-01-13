@@ -7,10 +7,6 @@
 			parent::__construct();
 			$this->load->database();
 		}
-		
-		
-
-
 
 
 		function view_customer()
@@ -485,6 +481,16 @@
 			$result =	$query->row_array();
 			return($result);
 		}
+
+		function view_advance($CustomerID){
+            $this->db->select('PaymentDate,Amount,PaymentID,ReferenceNo,OrderFormID');
+            $this->db->from('payment');
+            $this->db->where('CustomerID',$CustomerID);
+            $this->db->where('PaymentTypeID','1');
+            $query =	$this->db->get();
+            $result =	$query->result_array();
+            return($result);
+        }
 
 
 	}

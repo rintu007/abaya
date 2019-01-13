@@ -233,7 +233,12 @@ class sale extends CI_Controller
 
 
 
+    function view_advance(){
+        $CustomerID 	=	$_POST['CustomerID'];
+        $data['advances'] = $this->m_sale->view_advance($CustomerID);
+        $this->load->view('sale/view_advances',$data);
 
+    }
 
 
 	function view_sale_ajax()

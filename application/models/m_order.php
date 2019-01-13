@@ -199,7 +199,7 @@
 
 		function view_single($OrderFormID)
 		{
-			$this->db->select('O.OrderFormID,O.ReferenceNo,O.OrderDate,O.TotalAmount,O.ItemCount,C.CustomerName,C.CustomerPhone,O.Discount,O.TotalTax,O.ItemNo,O.TotalWD,O.CustomerID,O.DeliveryDate,O.Type,sum(Amount) as AdvanceAmount');
+			$this->db->select('O.OrderFormID,O.ReferenceNo,O.OrderDate,O.TotalAmount,O.ItemCount,C.CustomerName,C.CustomerPhone,O.Discount,O.TotalTax,O.ItemNo,O.TotalWD,O.CustomerID,O.DeliveryDate,O.Type,sum(P.Amount) as AdvanceAmount');
 			$this->db->from('order_form O');
 			$this->db->join('customer C','C.CustomerID = O.CustomerID','left');
 			$this->db->join('payment P','P.OrderFormID = O.OrderFormID','left');
