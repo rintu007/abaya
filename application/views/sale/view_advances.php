@@ -27,7 +27,7 @@
         <td>
            Total Amounts from advance list
         </td>
-        <td >  <input type="text" class="form-control" id="TotalAdvancePaid" name="TotalAdvancePaid" readonly  style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;" value="0.00"   >  </td>
+        <td >  <input type="text" class="form-control" id="TotalAdvancePaid" name="TotalAdvancePaid" readonly  style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;" value="0.00" >  </td>
 
         </tfoot>
     </table>
