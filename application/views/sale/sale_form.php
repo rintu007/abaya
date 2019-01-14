@@ -104,26 +104,26 @@
 													    								<td class="thick-line text-right"><?php echo number_format($TotalAmount,2); ?></td>
 													    							</tr>
 
-													    <!-- 							<tr>
-													    								<td class="no-line"></td>
-													    								<td class="no-line"></td>
-													    								<td class="no-line"></td>
-													    								<td class="no-line"></td>
-		
-													    								<td class="no-line text-center"><strong>Piad</strong></td>
-													    								<td class="no-line text-right">0.00</td>
-													    							</tr>
+                                                                                    <tr>
+                                                                                        <td class="no-line"></td>
+                                                                                        <td class="no-line"></td>
+                                                                                        <td class="no-line"></td>
+                                                                                        <td class="no-line"></td>
 
-													    							<tr>
-													    								<td class="no-line"></td>
-													    								<td class="no-line"></td>
-													    								<td class="no-line"></td>
-													    								<td class="no-line"></td>
-		
-													    								<td class="no-line text-center"><strong>Balance</strong></td>
-													    								<td class="no-line text-right"><?php echo number_format($TotalAmount,2); ?></td>
-													    							</tr> -->
-													    							
+
+                                                                                        <td class="no-line text-center"><strong>Paid</strong></td>
+                                                                                        <td class="no-line text-right"><?php echo number_format($PaidAmount,2); ?></td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="no-line"></td>
+                                                                                        <td class="no-line"></td>
+                                                                                        <td class="no-line"></td>
+                                                                                        <td class="no-line"></td>
+
+
+                                                                                        <td class="no-line text-center"><strong>Balance</strong></td>
+                                                                                        <td class="no-line text-right"><?php echo number_format(($TotalAmount-$PaidAmount),2); ?></td>
+                                                                                    </tr>
 													    							
 													    						</tbody>
 													    					</table>

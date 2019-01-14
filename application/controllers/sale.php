@@ -231,6 +231,14 @@ class sale extends CI_Controller
 	}
 
 
+    function view_payment()
+    {
+        $SaleID 	=	$_POST['SaleID'];
+        $data			=	$this->m_sale->view_sale_customer($SaleID);
+        $data['Type']	=	'view';
+        $data['Payments']	=	$this->m_sale->view_payments($SaleID);
+        $this->load->view('sale/view_payment',$data);
+    }
 
 
     function view_advance(){
@@ -250,6 +258,40 @@ class sale extends CI_Controller
 		$this->load->view('sale/sale_form',$data);
 	}
 
+    function add_payment()
+    {
+        $data['SaleID'] 	    =	$_POST['SaleID'];
+        $data['CustomerID'] 	=	$_POST['CustomerID'];
+        $data['ReferenceNo'] 	=	$_POST['ReferenceNo'];
+        $data['CustomerName'] 	=	$this->m_sale->view_cutomer_name($_POST['CustomerID']);;
+        $data['Type']	=	'add';
+        $this->load->view('sale/view_payment',$data);
+    }
+
+    function insert_payment()
+    {
+        $SaleID 	    =	$_POST['SaleID'];
+        $PaymentDate 	=	$_POST['PaymentDate'];
+        $Amount 		=	$_POST['Amount'];
+
+        $data			=	$this->m_sale->view_sale_customer($SaleID);
+        $ReferenceNo	=	$data['ReferenceNo'];
+        $CustomerID 	=	$data['CustomerID'];
+        $this->m_sale->insert_payment($SaleID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID);
+
+
+        $data['Payments']	=	$this->m_sale->view_payments($SaleID);
+        $data['Type']	=	'view';
+        $this->load->view('sale/view_payment',$data);
+    }
+
+
+    function delete_payment()
+    {
+        $PaymentID 	=	$_POST['PaymentID'];
+        $result =	$this->m_sale->delete_advance($PaymentID);
+        echo $result;
+    }
 
 	function delete()
 	{

@@ -468,15 +468,15 @@
 						<div class="row">
 
 						<br>
-						<div class="col-sm-2">
-							<div class="input-group has-error">
-				                <div class="input-group-btn">
-				                  <button type="button" class="btn btn-danger">Discount</button>
-				                </div>
-				                <input type="text" class="form-control" id="Discount" name="Discount" value="<?php echo $Discount; ?>" 
-				                onkeyup="GrandTotal();" style="font-size:13px; font-weight: bold;;text-align:right;">
-				              </div>
-				          </div>
+<!--						<div class="col-sm-2">-->
+<!--							<div class="input-group has-error">-->
+<!--				                <div class="input-group-btn">-->
+<!--				                  <button type="button" class="btn btn-danger">Discount</button>-->
+<!--				                </div>-->
+<!--				                <input type="text" class="form-control" id="Discount" name="Discount" value="--><?php //echo $Discount; ?><!--" -->
+<!--				                onkeyup="GrandTotal();" style="font-size:13px; font-weight: bold;;text-align:right;">-->
+<!--				              </div>-->
+<!--				          </div>-->
 
 				          <div class="col-sm-2">
 							<div class="input-group has-default">
@@ -498,7 +498,7 @@
 				              </div>
 				          </div>
 
-				          <div class="col-sm-2">
+				          <div class="col-sm-3">
 							<div class="input-group has-warning">
 				                <div class="input-group-btn">
 				                  <button type="button" class="btn btn-warning " title="Click here to get Taotal Amount as advance "  onclick="TotalAsAdvance();">Advance</button>
@@ -508,7 +508,7 @@
 				              </div>
 				          </div>
 
-				          <div class="col-sm-2">
+				          <div class="col-sm-3">
 							<div class="input-group has-default">
 				                <div class="input-group-btn">
 				                  <button type="button" class="btn btn-default ">Balance</button>
@@ -520,8 +520,8 @@
 
 				          <div class="col-sm-2">
 
-													
-		
+
+                                    <input type="hidden" class="form-control" id="Discount" name="Discount" value="0" >
 									<input type="hidden" name="ItemNo" id="ItemNo" value="<?php echo $ItemNo; ?>">
 									<input type="hidden" name="ItemCount" id="ItemCount" value="<?php echo $ItemCount; ?>">
 									<input type="hidden" name="TotalWD" id="TotalWD" value="<?php echo $TotalWD; ?>" >

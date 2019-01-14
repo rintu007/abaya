@@ -122,12 +122,15 @@
 			$Discount 		=	!empty($data['Discount'])?$data['Discount']:0;
 			$TotalAmount 	=	$data['TotalAmount'];
 			$ItemNo 		=	$data['ItemNo'];
+            $PaidAmount 	=	!empty($data['PaidAmount'])?$data['PaidAmount']:0;
 
-			$array 		=	array('ReferenceNo'=>$ReferenceNo,'CustomerID'=>$CustomerID,'SaleDate'=>$SaleDate,'Total'=>$Total,'TaxAmount'=>$TaxAmount,'Discount'=>$Discount,'TotalAmount'=>$TotalAmount,'ItemNo'=>$ItemNo);
+
+            $array 		=	array('ReferenceNo'=>$ReferenceNo,'CustomerID'=>$CustomerID,'SaleDate'=>$SaleDate,'Total'=>$Total,'TaxAmount'=>$TaxAmount,'Discount'=>$Discount,'TotalAmount'=>$TotalAmount,'ItemNo'=>$ItemNo);
 			$result 	=	$this->db->insert('sale',$array);
 			
 			$SaleID 	=	$this->db->insert_id();
-			
+
+			//sale item inserting
 			foreach($data['ItemSl'] as $row => $value)
 			{
 				$ItemType		=	$data['ItemType'][$row];
@@ -143,8 +146,7 @@
 				$Amount			=	!empty($data['Amount'][$row])?$data['Amount'][$row]:0;
 				$MUStat			=	!empty($data['MUStat'][$row])?$data['MUStat'][$row]:'no';
 				$ProductMUID	=	!empty($data['ProductMUID'][$row])?$data['ProductMUID'][$row]:0;
-				$ProductBatchID	=	!empty($data['ProductBatchID'][$row])?$data['ProductBatchID'][$row]:0;
-				
+                $ProductBatchID	=	!empty($data['ProductBatchID'][$row])?$data['ProductBatchID'][$row]:0;
 
 				//inserting stock in items
 				$array_item 	=	array('SaleID'=>$SaleID,'ItemType'=>$ItemType,'ProductID'=>$ProductID,'OrderItemID'=>$OrderItemID,'CheckOrderItem'=>$CheckOrderItem,'ItemSl'=>$ItemSl,'TaxRate'=>$TaxRate,'TaxMethod'=>$TaxMethod,
@@ -172,9 +174,26 @@
 				{
 					//change all order item to sale
 					$this->order_sale($OrderItemID,$SaleDate);
-				}			
-				
-			}	
+				}
+			}
+
+            //for payment against sale
+            if($PaidAmount != 0)
+            {
+                $payarray 		=	array('Type'=>'received','PaymentTypeID'=>2,'PaymentDate'=>$SaleDate,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID,'Amount'=>$PaidAmount,'CustomerID'=>$CustomerID);
+                $this->db->insert('payment',$payarray);
+            }
+
+            //update advance amounts to sale amount
+            if(!empty($data['PaymentID'])){
+                foreach($data['PaymentID'] as $row => $value)
+                {
+                    $PaymentID = $data['PaymentID'][$row];
+                    $payarray 		=	array('PaymentTypeID'=>2,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID);
+                    $this->db->where('PaymentID',$PaymentID);
+                    $this->db->update('payment',$payarray);
+                }
+            }
 
 			return($result);
 			
@@ -243,8 +262,19 @@
 					$this->order_sale($OrderItemID,$SaleDate);
 				}
 				
-			}	
-			
+			}
+
+            //update advance amounts to sale amount
+            if(!empty($data['PaymentID'])){
+                foreach($data['PaymentID'] as $row => $value)
+                {
+                    $PaymentID = $data['PaymentID'][$row];
+                    $payarray 		=	array('PaymentTypeID'=>2,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID);
+                    $this->db->where('PaymentID',$PaymentID);
+                    $this->db->update('payment',$payarray);
+                }
+            }
+
 			return($result);
 			
 		}
@@ -379,7 +409,53 @@
 			
 		}
 
-		//for deleting
+
+        function view_sale_customer($SaleID)
+        {
+            $this->db->select('O.SaleID,O.ReferenceNo,C.CustomerName,C.CustomerPhone,C.CustomerID,O.TotalAmount');
+            $this->db->from('sale O');
+            $this->db->join('customer C','C.CustomerID = O.CustomerID','left');
+            $this->db->where('O.SaleID',$SaleID);
+            $query 	=	$this->db->get();
+            $result =	$query->row_array();
+            return($result);
+        }
+
+        function view_payments($SaleID)
+        {
+            $this->db->select('PaymentDate,Amount,PaymentID,OrderFormID');
+            $this->db->from('payment');
+            $this->db->where('SaleID',$SaleID);
+            $this->db->where('PaymentTypeID','2');
+            $query =	$this->db->get();
+            $result =	$query->result_array();
+            return($result);
+        }
+
+
+        //for deleting
+
+        function delete_advance($PaymentID)
+        {
+            $this->db->select('P.OrderFormID,O.ReferenceNo');
+            $this->db->from('payment P');
+            $this->db->join('order_form O','O.OrderFormID = P.OrderFormID','left');
+            $this->db->where('PaymentID',$PaymentID);
+            $query 	=	$this->db->get();
+            $pm =	$query->row_array();
+            if(!empty($pm['OrderFormID'])){
+                $payarray 		=	array('PaymentTypeID'=>1,'ReferenceNo'=>$pm['ReferenceNo'],'SaleID'=>'');
+                $this->db->where('PaymentID',$PaymentID);
+                $result = $this->db->update('payment',$payarray);
+            }
+            else{
+                $this->db->where('PaymentID',$PaymentID);
+                $result = $this->db->delete('payment');
+            }
+
+
+            return($result);
+        }
 		
 		function delete($SaleID)
 		{
@@ -409,10 +485,12 @@
 
 		function view_single($SaleID)
 		{
-			$this->db->select('P.SaleID,P.ReferenceNo,P.SaleDate,P.TotalAmount,P.CustomerID,P.Discount,P.Total,P.TaxAmount,P.ItemNo,S.CustomerName,S.CustomerPhone');
+			$this->db->select('P.SaleID,P.ReferenceNo,P.SaleDate,P.TotalAmount,P.CustomerID,P.Discount,P.Total,P.TaxAmount,P.ItemNo,S.CustomerName,S.CustomerPhone,sum(A.Amount) as PaidAmount');
 			$this->db->from('sale P');
-			$this->db->join('customer S','S.CustomerID = P.CustomerID','left');
-			$this->db->where('SaleID',$SaleID);
+            $this->db->join('customer S','S.CustomerID = P.CustomerID','left');
+            $this->db->join('payment A','A.SaleID = P.SaleID','left');
+            $this->db->where('A.PaymentTypeID',2);
+            $this->db->where('P.SaleID',$SaleID);
 			$query 	=	$this->db->get();
 			$result =	$query->row_array();
 			return($result);
@@ -490,6 +568,22 @@
             $query =	$this->db->get();
             $result =	$query->result_array();
             return($result);
+        }
+
+        function view_cutomer_name($CustomerID)
+        {
+            $this->db->select('CustomerName');
+            $this->db->from('customer');
+            $this->db->where('CustomerID',$CustomerID);
+            $query =	$this->db->get();
+            $result =	$query->row_array();
+            return($result['CustomerName']);
+        }
+
+        function insert_payment($SaleID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID)
+        {
+            $payarray 		=	array('Type'=>'received','PaymentTypeID'=>2,'PaymentDate'=>$PaymentDate,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID,'Amount'=>$Amount,'CustomerID'=>$CustomerID);
+            $this->db->insert('payment',$payarray);
         }
 
 

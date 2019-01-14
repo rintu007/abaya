@@ -203,7 +203,8 @@
 			$this->db->from('order_form O');
 			$this->db->join('customer C','C.CustomerID = O.CustomerID','left');
 			$this->db->join('payment P','P.OrderFormID = O.OrderFormID','left');
-			$this->db->where('O.OrderFormID',$OrderFormID);
+            $this->db->where('P.PaymentTypeID',1);
+            $this->db->where('O.OrderFormID',$OrderFormID);
 			$query 	=	$this->db->get();
 			$result =	$query->row_array();
 			return($result);

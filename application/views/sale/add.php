@@ -189,10 +189,10 @@
 															<th>Order No</th>
 															<th>Item</th>
 															<th>Unit</th>
-															<th>Amount</th>
+															<th>Rate</th>
 															<th>QTY</th>
 															<th>Tax</th>
-															<th>Total</th>
+															<th>Amount</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -220,7 +220,7 @@
 						<div class="col-sm-2">
 							<div class="input-group has-primary">
 				                <div class="input-group-btn">
-				                  <button type="button" class="btn btn-primary" >Amount</button>
+				                  <button type="button" class="btn btn-primary" >Total</button>
 				                </div>
 				                <input type="text" class="form-control" id="Total" name="Total" readonly style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;">
 				              </div>
@@ -253,7 +253,7 @@
 				          <div class="col-sm-3">
 							<div class="input-group has-primary">
 				                <div class="input-group-btn">
-				                  <button type="button" class="btn btn-primary" >Total</button>
+				                  <button type="button" class="btn btn-primary" >Subtotal</button>
 				                </div>
 				                <input type="text" class="form-control" id="TotalAmount" name="TotalAmount" readonly style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;">
 				              </div>
@@ -262,7 +262,7 @@
                             <div class="col-sm-3">
                                 <div class="input-group has-success">
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn btn-success"  >Paid now</button>
+                                        <button type="button" class="btn btn-success"  >Pay now</button>
                                     </div>
                                     <input type="text" class="form-control" id="PaidAmount" name="PaidAmount"  style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;" onkeyup="GrandTotal();" value="0.00" >
                                 </div>
@@ -281,11 +281,11 @@
 
                         <div class="row">
 
-                            <div class="col-sm-7">
+                            <div class="col-sm-6">
 
                             </div>
 
-                            <div class="col-sm-5" id="ShowAdvance">
+                            <div class="col-sm-6" id="ShowAdvance">
 
                             </div>
 
@@ -509,7 +509,6 @@
 
 <script type="text/javascript">
 
-		
 
 			var IC 	=	parseInt($('#ItemNo').val());
 
@@ -549,6 +548,7 @@
 			//customer order check
 			function CheckOrder()
 			{
+                $('#ShowAdvance').html('');
 				let CustomerID 	=	$('#CustomerID').val();
 				$.ajax({
 			      url: '<?php echo base_url()."sale/search_order";?>',
@@ -602,6 +602,8 @@
 		      				$('#OrModal').modal('toggle');
 
 
+
+
 	      				}
 	      				else
 	      				{
@@ -616,10 +618,7 @@
 				        console.log("Details: " + desc + "\nError:" + err);
 				      }
 				    });
-
                 ShowAdvance();
-
-
 
 			}
 
