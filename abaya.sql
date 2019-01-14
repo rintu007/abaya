@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 03, 2019 at 06:16 AM
+-- Generation Time: Jan 14, 2019 at 11:26 AM
 -- Server version: 10.1.25-MariaDB
 -- PHP Version: 5.6.31
 
@@ -63,7 +63,8 @@ CREATE TABLE `customer` (
 
 INSERT INTO `customer` (`CustomerID`, `CustomerName`, `CustomerEmail`, `CustomerPhone`, `CustomerAddress`, `TRN`, `ImageID`, `CustomerActive`) VALUES
 (1, 'Test Customer', '', '', '', '', 0, '1'),
-(2, 'Suhail', '', '0527947235', '', '', 0, '1');
+(2, 'Suhail', '', '0527947235', '', '', 0, '1'),
+(3, 'Santhosh', '', '', '', '', 0, '1');
 
 -- --------------------------------------------------------
 
@@ -169,7 +170,9 @@ CREATE TABLE `order_assign` (
 
 INSERT INTO `order_assign` (`OrderAssignID`, `OrderAssignDate`, `ReadyDate`, `DeliveredDate`, `OrderItemID`, `StaffID`, `Status`) VALUES
 (1, '2019-01-03', '2019-01-03', '2019-01-03', 3, 1, 'delivered'),
-(2, '2019-01-03', '2019-01-03', '2019-01-03', 2, 1, 'delivered');
+(2, '2019-01-03', '2019-01-03', '2019-01-03', 2, 1, 'delivered'),
+(3, '2019-01-03', '2019-01-03', '2019-01-03', 6, 1, 'delivered'),
+(4, '2019-01-03', '2019-01-03', '0000-00-00', 7, 1, 'ready');
 
 -- --------------------------------------------------------
 
@@ -203,7 +206,9 @@ CREATE TABLE `order_form` (
 INSERT INTO `order_form` (`OrderFormID`, `ReferenceNo`, `CustomerID`, `OrderDate`, `DeliveryDate`, `Type`, `Discount`, `TotalTax`, `TotalWD`, `TotalAmount`, `ItemNo`, `ItemCount`, `CompleteDate`, `Sale`, `Status`, `OrderFormActive`) VALUES
 (1, '1500', 1, '2018-04-25', '2018-04-30', 'Normal', 0, 17.5, 367.5, 367.5, 1, 1, NULL, '0', 'new', '1'),
 (2, '123', 1, '2019-01-03', NULL, 'Urgent', 8.75, 133.75, 2808.75, 2800, 2, 2, NULL, '0', 'Partial Complete', '1'),
-(3, '578', 2, '2019-01-03', NULL, 'Normal', 0, 46.66, 980, 980, 3, 3, NULL, '0', 'new', '1');
+(3, '578', 2, '2019-01-03', NULL, 'Normal', 0, 46.66, 980, 980, 3, 3, NULL, '0', 'Partial Complete', '1'),
+(4, '512', 2, '2019-01-03', NULL, 'Normal', 0, 4.76, 100, 100, 1, 1, '2019-01-14', '1', 'Complete', '1'),
+(5, '512', 2, '2019-01-14', NULL, 'Normal', 0, 16.67, 350, 350, 1, 1, NULL, '0', 'new', '1');
 
 -- --------------------------------------------------------
 
@@ -258,7 +263,9 @@ INSERT INTO `order_item` (`OrderItemID`, `OrderFormID`, `OrderNo`, `BookNo`, `It
 (3, 2, '124', '3', 2, 'Item No 2', 1, 1, 1, 14, 5, 'exclusive', 475, 3, 71.25, 1496.25, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-01-03', '2019-01-03', '2019-01-03', NULL, '1', '0', 'delivered'),
 (4, 3, '578', '12', 1, 'Suhail', 1, 7, 1, 19, 5, 'exclusive', 238.1, 1, 11.9, 250, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', 'new'),
 (5, 3, '579', '12', 2, 'Item No 2', 1, 4, 1, 16, 5, 'exclusive', 219.05, 1, 10.95, 230, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', 'new'),
-(6, 3, '580', '12', 3, 'Item No 3', 1, 1, 1, 14, 5, 'exclusive', 476.19, 1, 23.81, 500, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', 'new');
+(6, 3, '580', '12', 3, 'Item No 3', 1, 1, 1, 14, 5, 'exclusive', 476.19, 1, 23.81, 500, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-01-03', '2019-01-03', '2019-01-03', '2019-01-14', '1', '1', 'delivered'),
+(7, 4, '512', '11', 1, 'Suhail', 3, 0, 0, 0, 5, 'inclusive', 100, 1, 4.76, 100, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-01-03', '2019-01-03', NULL, '2019-01-14', '1', '1', 'ready'),
+(8, 5, '512', '11', 1, 'Suhail', 1, 5, 2, 17, 5, 'exclusive', 333.33, 1, 16.67, 350, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', 'new');
 
 -- --------------------------------------------------------
 
@@ -287,7 +294,11 @@ CREATE TABLE `payment` (
 INSERT INTO `payment` (`PaymentID`, `Type`, `PaymentTypeID`, `PaymentDate`, `ReferenceNo`, `SaleID`, `PurchaseID`, `OrderFormID`, `CustomerID`, `SupplierID`, `Amount`) VALUES
 (1, 'received', 1, '2018-04-25', '1500', 0, 0, 1, 1, 0, 100),
 (2, 'received', 1, '2019-01-03', '123', 0, 0, 2, 1, 0, 800),
-(3, 'received', 1, '2019-01-03', '578', 0, 0, 3, 2, 0, 500);
+(3, 'received', 2, '2019-01-03', '1250', 4, 0, 3, 2, 0, 500),
+(4, 'received', 1, '2019-01-03', '512', 0, 0, 4, 2, 0, 50),
+(5, 'received', 1, '2019-01-13', '512', 0, 0, 4, 2, 0, 10),
+(7, 'received', 1, '2019-01-14', '512', 0, 0, 5, 2, 0, 150),
+(11, 'received', 2, '2019-01-14', '1250', 4, 0, 0, 2, 0, 50);
 
 -- --------------------------------------------------------
 
@@ -456,6 +467,13 @@ CREATE TABLE `sale` (
   `Status` varchar(20) NOT NULL DEFAULT 'new'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `sale`
+--
+
+INSERT INTO `sale` (`SaleID`, `ReferenceNo`, `CustomerID`, `SaleDate`, `Total`, `TaxAmount`, `Discount`, `TotalAmount`, `ItemNo`, `Status`) VALUES
+(4, '1250', 2, '2019-01-14', 571.43, 28.57, 10, 590, 3, 'new');
+
 -- --------------------------------------------------------
 
 --
@@ -481,6 +499,14 @@ CREATE TABLE `sale_item` (
   `ProductBatchID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `sale_item`
+--
+
+INSERT INTO `sale_item` (`SaleItemID`, `SaleID`, `ItemType`, `ProductID`, `OrderItemID`, `CheckOrderItem`, `ItemSl`, `TaxRate`, `TaxMethod`, `Rate`, `Quantity`, `TaxValue`, `Amount`, `MUStat`, `ProductMUID`, `ProductBatchID`) VALUES
+(10, 4, 'order', 0, 6, 0, 2, 5, 'exclusive', 476.19, 1, 23.81, 500, 'no', 0, 0),
+(11, 4, 'order', 0, 7, 0, 3, 5, 'inclusive', 100, 1, 4.76, 100, 'no', 0, 0);
+
 -- --------------------------------------------------------
 
 --
@@ -504,7 +530,8 @@ CREATE TABLE `service` (
 
 INSERT INTO `service` (`ServiceID`, `ServiceName`, `TaxID`, `TaxMethod`, `ServicePrice`, `ImageID`, `WFServiceID`, `ServiceActive`) VALUES
 (1, 'Abaya', 7, 'exclusive', 300, 12, 2, '1'),
-(2, 'Shawl', 7, 'inclusive', 50, 13, 0, '1');
+(2, 'Shawl', 7, 'inclusive', 50, 13, 0, '1'),
+(3, 'Test Service', 7, 'inclusive', 100, 0, 0, '1');
 
 -- --------------------------------------------------------
 
@@ -853,7 +880,7 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `customer`
 --
 ALTER TABLE `customer`
-  MODIFY `CustomerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `CustomerID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `design`
 --
@@ -873,22 +900,22 @@ ALTER TABLE `manufacture`
 -- AUTO_INCREMENT for table `order_assign`
 --
 ALTER TABLE `order_assign`
-  MODIFY `OrderAssignID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `OrderAssignID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `order_form`
 --
 ALTER TABLE `order_form`
-  MODIFY `OrderFormID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `OrderFormID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `order_item`
 --
 ALTER TABLE `order_item`
-  MODIFY `OrderItemID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `OrderItemID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 --
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `PaymentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `PaymentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `payment_type`
 --
@@ -923,17 +950,17 @@ ALTER TABLE `purchase_item`
 -- AUTO_INCREMENT for table `sale`
 --
 ALTER TABLE `sale`
-  MODIFY `SaleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `SaleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `sale_item`
 --
 ALTER TABLE `sale_item`
-  MODIFY `SaleItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `SaleItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `service`
 --
 ALTER TABLE `service`
-  MODIFY `ServiceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `ServiceID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `staff`
 --
