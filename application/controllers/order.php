@@ -30,6 +30,10 @@ class order extends CI_Controller
 		$data['title']			=	'Order Form';
 		$data['Customers']		=	$this->m_order->view_customers();
 		$data['Services']		=	$this->m_order->view_services();
+
+        $data['Accounts']	=	$this->m_order->view_payment_accounts();
+        $data['PaymentAccountID']		=	1;
+
 		$this->load->view('order/add',$data);		
 	}
 

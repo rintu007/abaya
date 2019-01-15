@@ -39,10 +39,15 @@ class purchase extends CI_Controller
 
 		$data['Warehouse']	=	$this->m_purchase->view_warehouse();
 		$data['Suppliers']	=	$this->m_purchase->view_suppliers();
-		$data['Tax']		=	$this->m_purchase->view_tax();
+        $data['Tax']		=	$this->m_purchase->view_tax();
+
+        $data['Accounts']	=	$this->m_purchase->view_payment_accounts();
+        $data['PaymentAccountID']		=	1;
+
 		$data['title']		=	'Purchase';
-		$data['mode']		=	'add';
-		$this->load->view('purchase/add',$data);		
+        $data['mode']		=	'add';
+
+		$this->load->view('purchase/add',$data);
 	}
 	function edit($PurchaseID)
 	{
@@ -121,7 +126,89 @@ class purchase extends CI_Controller
 		}
 
 	}
-	function search_product()
+
+    function view_payment_list()
+    {
+        $PurchaseID 	=	$_POST['PurchaseID'];
+        $data			=	$this->m_purchase->view_purchase_supplier($PurchaseID);
+        $data['Type']	=	'view';
+        $data['Payments']	=	$this->m_purchase->view_payments($PurchaseID);
+        $this->load->view('purchase/view_payment_list',$data);
+    }
+
+    function view_payment()
+    {
+        $PurchaseID 	=	$_POST['PurchaseID'];
+        $data			=	$this->m_purchase->view_purchase_supplier($PurchaseID);
+        $data['Type']	=	'view';
+        $data['Payments']	=	$this->m_purchase->view_payments($PurchaseID);
+        $this->load->view('purchase/view_payment',$data);
+    }
+
+    function add_payment()
+    {
+        $data['PurchaseID'] 	=	$_POST['PurchaseID'];
+        $data['SupplierID'] 	=	$_POST['SupplierID'];
+        $data['ReferenceNo'] 	=	$_POST['ReferenceNo'];
+        $data['SupplierName'] 	=	$this->m_purchase->view_supplier_name($_POST['SupplierID']);;
+        $data['Type']	=	'add';
+        $this->load->view('purchase/view_payment',$data);
+    }
+
+    function add_payment_list()
+    {
+        $data['PurchaseID'] 	    =	$_POST['PurchaseID'];
+        $data['SupplierID'] 	=	$_POST['SupplierID'];
+        $data['ReferenceNo'] 	=	$_POST['ReferenceNo'];
+        $data['SupplierName'] 	=	$this->m_purchase->view_supplier_name($_POST['SupplierID']);;
+        $data['Type']	=	'add';
+        $this->load->view('purchase/view_payment_list',$data);
+    }
+
+
+    function insert_payment()
+    {
+        $PurchaseID 	    =	$_POST['PurchaseID'];
+        $PaymentDate 	=	$_POST['PaymentDate'];
+        $Amount 		=	$_POST['Amount'];
+
+        $data			=	$this->m_purchase->view_purchase_supplier($PurchaseID);
+        $ReferenceNo	=	$data['ReferenceNo'];
+        $SupplierID 	=	$data['SupplierID'];
+        $this->m_purchase->insert_payment($PurchaseID,$PaymentDate,$Amount,$ReferenceNo,$SupplierID);
+
+
+        $data['Payments']	=	$this->m_purchase->view_payments($PurchaseID);
+        $data['Type']	=	'view';
+        $this->load->view('purchase/view_payment',$data);
+    }
+
+    function insert_payment_list()
+    {
+        $PurchaseID 	    =	$_POST['PurchaseID'];
+        $PaymentDate 	=	$_POST['PaymentDate'];
+        $Amount 		=	$_POST['Amount'];
+
+        $data			=	$this->m_purchase->view_purchase_supplier($PurchaseID);
+        $ReferenceNo	=	$data['ReferenceNo'];
+        $SupplierID 	=	$data['SupplierID'];
+        $this->m_purchase->insert_payment($PurchaseID,$PaymentDate,$Amount,$ReferenceNo,$SupplierID);
+
+
+        $data['Payments']	=	$this->m_purchase->view_payments($PurchaseID);
+        $data['Type']	=	'view';
+        $this->load->view('purchase/view_payment_list',$data);
+    }
+
+
+    function delete_payment()
+    {
+        $PaymentID 	=	$_POST['PaymentID'];
+        $result =	$this->m_purchase->delete_payment($PaymentID);
+        echo $result;
+    }
+
+    function search_product()
 	{
 		$ItemSearch 	=	$_POST['ItemSearch'];
 		//seraching item barcode

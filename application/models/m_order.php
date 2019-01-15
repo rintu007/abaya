@@ -169,7 +169,17 @@
 			
 		}
 
-		function view_order()
+        function view_payment_accounts()
+        {
+            $this->db->select('PaymentAccountID,PaymentAccountName');
+            $this->db->from('payment_account');
+            $query 	=	$this->db->get();
+            $result =	$query->result_array();
+            return($result);
+        }
+
+
+        function view_order()
 		{
 			$this->db->select('O.OrderFormID,O.ReferenceNo,O.OrderDate,O.DeliveryDate,O.Type,O.TotalAmount,O.ItemCount,C.CustomerName,C.CustomerPhone,O.Status');
 			$this->db->from('order_form O');
@@ -181,6 +191,7 @@
 			$result =	$query->result_array();
 			return($result);
 		}
+
 
 		function view_complete()
 		{

@@ -479,7 +479,7 @@
 <!--				          </div>-->
 
 				          <div class="col-sm-2">
-							<div class="input-group has-default">
+							<div class="input-group has-primary">
 				                <div class="input-group-btn">
 				                  <button type="button" class="btn btn-primary">Tax</button>
 				                </div>
@@ -489,9 +489,9 @@
 				          </div>
 
 				          <div class="col-sm-2">
-							<div class="input-group has-success">
+							<div class="input-group has-primary">
 				                <div class="input-group-btn">
-				                  <button type="button" class="btn btn-success" >Total</button>
+				                  <button type="button" class="btn btn-primary" >Total</button>
 				                </div>
 				                <input type="text" class="form-control" id="TotalAmount" name="TotalAmount" value="<?php echo $TotalAmount; ?>" readonly 
 				                style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;">
@@ -499,9 +499,9 @@
 				          </div>
 
 				          <div class="col-sm-3">
-							<div class="input-group has-warning">
+							<div class="input-group has-success">
 				                <div class="input-group-btn">
-				                  <button type="button" class="btn btn-warning " title="Click here to get Taotal Amount as advance "  onclick="TotalAsAdvance();">Advance</button>
+				                  <button type="button" class="btn btn-success " title="Click here to get Taotal Amount as advance "  onclick="TotalAsAdvance();">Advance</button>
 				                </div>
 				                <input type="text" class="form-control" id="AdvanceAmount" name="AdvanceAmount"  value="<?php echo $AdvanceAmount; ?>" onclick="TotalAsAdvance();"
 				                style="font-size:13px; font-weight: bold;text-align:right;background-color: #fff;" readonly>
@@ -509,9 +509,9 @@
 				          </div>
 
 				          <div class="col-sm-3">
-							<div class="input-group has-default">
+							<div class="input-group has-warning">
 				                <div class="input-group-btn">
-				                  <button type="button" class="btn btn-default ">Balance</button>
+				                  <button type="button" class="btn btn-warning ">Balance</button>
 				                </div>
 				                <input type="text" class="form-control" id="BalanceAmount" name="BalanceAmount" readonly value="<?php echo $TotalAmount-$AdvanceAmount; ?>"
 				                style="font-size:13px; font-weight: bold;text-align:right;background-color: #fff;">

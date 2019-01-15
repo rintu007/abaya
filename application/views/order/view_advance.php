@@ -105,7 +105,7 @@
 													</div>
 													<div class="modal-footer">
 
-														<button type="button" class="btn btn-primary btn-outline btn-icon left-icon" onclick="AddMoreAdvance(<?php echo $OrderFormID; ?>,<?php echo $CustomerID; ?>,<?php echo $ReferenceNo; ?>);"> 
+														<button type="button" class="btn btn-primary btn-outline btn-icon left-icon" onclick="AddMoreAdvance(<?php echo $OrderFormID; ?>,<?php echo $CustomerID; ?>,'<?php echo $ReferenceNo; ?>');">
 															<i class="fa fa-plus"></i><span> Add more Advance</span> 
 														</button>
 

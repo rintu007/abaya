@@ -110,8 +110,8 @@
 
 							<div class="form-group">
 								<label class="control-label mb-10">Customer</label>
-								<select class="form-control select2" name="CustomerID" id="CustomerID" required="required" onchange="CheckOrder();">
-									<option value="">Chose a Supplier</option>
+								<select class="form-control select2" name="CustomerID" id="CustomerID" required="required" onchange="CheckOrder();" >
+									<option value="">Chose a Customer</option>
 									
 <?php
 					foreach($Customer as $Cust)
@@ -278,8 +278,8 @@
 
 						<div class="row">
 
-						
-						<div class="col-sm-2">
+
+						<div class="col-sm-3">
 							<div class="input-group has-primary">
 				                <div class="input-group-btn">
 				                  <button type="button" class="btn btn-primary" >Total</button>
@@ -291,7 +291,7 @@
 				          
 
 
-				          <div class="col-sm-2">
+				          <div class="col-sm-3">
 							<div class="input-group has-primary">
 				                <div class="input-group-btn">
 				                  <button type="button" class="btn btn-primary">Vat </button>
@@ -301,7 +301,7 @@
 				          </div>
 
 
-				        <div class="col-sm-2">
+				        <div class="col-sm-3">
 							<div class="input-group has-primary">
 				                <div class="input-group-btn">
 				                  <button type="button" class="btn btn-primary">Discount</button>
@@ -322,6 +322,21 @@
 				          </div>
 
 
+
+
+
+
+
+
+                        </div>
+
+
+                        <div class="row">
+                            <br>
+                            <div class="col-sm-9">
+
+                            </div>
+
                             <div class="col-sm-3">
                                 <div class="input-group has-success">
                                     <div class="input-group-btn">
@@ -332,10 +347,8 @@
                             </div>
 
 
-
-
-
                         </div>
+
 
                         <div class="row">
 
@@ -371,6 +384,7 @@
                         <div class="row">
                             <br>
                             <div class="col-sm-2 pull-right">
+                                <input type="hidden" name="OldCustomerID" id="OldCustomerID" value="<?php echo isset($CustomerID)?$CustomerID:''; ?>">
                                 <input type="hidden" name="SaleID" id="SaleID" value="<?php echo isset($SaleID)?$SaleID:''; ?>">
                                 <input type="hidden" name="ItemNo" id="ItemNo" value="<?php echo isset($ItemNo)?$ItemNo:''; ?>">
                                 <button class="btn btn-primary  btn-rounded btn-block btn-anim" type="button" onclick="SubmitForm();"><i class="fa fa-check-square"></i><span class="btn-text">Submit</span></button>
@@ -584,7 +598,31 @@
 				}
 				else
 				{
-					$("#PurchaseForm").submit();
+				    if($('#CustomerID').val() != $('#OldCustomerID').val() ){
+
+                        swal({
+                            title: "You are changing the customer",
+                            text: "All payment received from old customer will move to new customer",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#f8b32d",
+                            confirmButtonText: "Yes, continue !",
+                            cancelButtonText: "No, cancel !",
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        }, function(isConfirm){
+                            if (isConfirm) {
+
+                                $("#PurchaseForm").submit();
+
+                            }
+                        });
+
+                    }
+                    else{
+                        $("#PurchaseForm").submit();
+                    }
+
 				}
 				
 			}

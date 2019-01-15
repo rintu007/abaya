@@ -123,6 +123,8 @@
 			$TotalAmount 	=	$data['TotalAmount'];
 			$ItemNo 		=	$data['ItemNo'];
             $PaidAmount 	=	!empty($data['PaidAmount'])?$data['PaidAmount']:0;
+            $PaymentAccountID	=	$data['PaymentAccountID'];
+
 
 
             $array 		=	array('ReferenceNo'=>$ReferenceNo,'CustomerID'=>$CustomerID,'SaleDate'=>$SaleDate,'Total'=>$Total,'TaxAmount'=>$TaxAmount,'Discount'=>$Discount,'TotalAmount'=>$TotalAmount,'ItemNo'=>$ItemNo);
@@ -180,7 +182,7 @@
             //for payment against sale
             if($PaidAmount != 0)
             {
-                $payarray 		=	array('Type'=>'received','PaymentTypeID'=>2,'PaymentDate'=>$SaleDate,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID,'Amount'=>$PaidAmount,'CustomerID'=>$CustomerID);
+                $payarray 		=	array('Type'=>'received','PaymentTypeID'=>2,'PaymentDate'=>$SaleDate,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID,'Amount'=>$PaidAmount,'CustomerID'=>$CustomerID,'PaymentAccountID'=>$PaymentAccountID);
                 $this->db->insert('payment',$payarray);
             }
 
@@ -189,7 +191,7 @@
                 foreach($data['PaymentID'] as $row => $value)
                 {
                     $PaymentID = $data['PaymentID'][$row];
-                    $payarray 		=	array('PaymentTypeID'=>2,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID);
+                    $payarray 		=	array('PaymentTypeID'=>2,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID,'OrderFormID'=>'');
                     $this->db->where('PaymentID',$PaymentID);
                     $this->db->update('payment',$payarray);
                 }
@@ -204,7 +206,8 @@
 			$SaleID 		=	$data['SaleID'];
 			$ReferenceNo 	=	$data['ReferenceNo'];
 			$CustomerID 	=	$data['CustomerID'];
-			$SaleDate 		=	date('y-m-d',strtotime($data['SaleDate']));
+            $OldCustomerID	=	$data['OldCustomerID'];
+            $SaleDate 		=	date('y-m-d',strtotime($data['SaleDate']));
 			$Total 			=	$data['Total'];
 			$TaxAmount 		=	!empty($data['TaxAmount'])?$data['TaxAmount']:0;
 			$Discount 		=	!empty($data['Discount'])?$data['Discount']:0;
@@ -269,17 +272,34 @@
                 foreach($data['PaymentID'] as $row => $value)
                 {
                     $PaymentID = $data['PaymentID'][$row];
-                    $payarray 		=	array('PaymentTypeID'=>2,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID);
+                    $payarray 		=	array('PaymentTypeID'=>2,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID,'OrderFormID'=>'');
                     $this->db->where('PaymentID',$PaymentID);
                     $this->db->update('payment',$payarray);
                 }
+            }
+
+            //if change the customer
+            if($CustomerID != $OldCustomerID)
+            {
+                $this->db->where('SaleID',$SaleID);
+                $this->db->update('payment',array("CustomerID"=>$CustomerID));
             }
 
 			return($result);
 			
 		}
 
-		function order_sale($OrderItemID,$SaleDate)
+        function view_payment_accounts()
+        {
+            $this->db->select('PaymentAccountID,PaymentAccountName');
+            $this->db->from('payment_account');
+            $query 	=	$this->db->get();
+            $result =	$query->result_array();
+            return($result);
+        }
+
+
+        function order_sale($OrderItemID,$SaleDate)
 		{
 			$array =	array('Sale'=>'1','SaleDate'=>$SaleDate);
 			$this->db->where('OrderItemID',$OrderItemID);
@@ -435,35 +455,25 @@
 
         //for deleting
 
-        function delete_advance($PaymentID)
+        function delete_payment($PaymentID)
         {
-            $this->db->select('P.OrderFormID,O.ReferenceNo');
-            $this->db->from('payment P');
-            $this->db->join('order_form O','O.OrderFormID = P.OrderFormID','left');
             $this->db->where('PaymentID',$PaymentID);
-            $query 	=	$this->db->get();
-            $pm =	$query->row_array();
-            if(!empty($pm['OrderFormID'])){
-                $payarray 		=	array('PaymentTypeID'=>1,'ReferenceNo'=>$pm['ReferenceNo'],'SaleID'=>'');
-                $this->db->where('PaymentID',$PaymentID);
-                $result = $this->db->update('payment',$payarray);
-            }
-            else{
-                $this->db->where('PaymentID',$PaymentID);
-                $result = $this->db->delete('payment');
-            }
-
-
+            $result = $this->db->delete('payment');
             return($result);
         }
 		
 		function delete($SaleID)
 		{
+		    //deleting payments
+            $this->db->where('SaleID',$SaleID);
+            $this->db->delete('payment');
+
 			$this->db->where('SaleID',$SaleID);
 			$this->db->delete('sale_item');
 
 			$this->db->where('SaleID',$SaleID);
 			$this->db->delete('sale');
+
 			return(1);
 		}
 		function sale_item_delete($SaleID)
@@ -474,10 +484,12 @@
 
 		function view()
 		{
-			$this->db->select('S.SaleID,S.ReferenceNo,S.SaleDate,S.TotalAmount,A.CustomerName');
+			$this->db->select('S.SaleID,S.ReferenceNo,S.SaleDate,S.TotalAmount,A.CustomerName,SUM(P.Amount) as PaidAmount');
 			$this->db->from('sale S');
 			$this->db->join('customer A','A.CustomerID = S.CustomerID','left');
-			$query 	=	$this->db->get();
+            $this->db->join('payment P','S.SaleID = P.SaleID','left');
+            $this->db->group_by('S.SaleID');
+            $query 	=	$this->db->get();
 			$result =	$query->result_array();
 			return($result);
 		}
@@ -489,7 +501,7 @@
 			$this->db->from('sale P');
             $this->db->join('customer S','S.CustomerID = P.CustomerID','left');
             $this->db->join('payment A','A.SaleID = P.SaleID','left');
-            $this->db->where('A.PaymentTypeID',2);
+           // $this->db->where('A.PaymentTypeID',2);
             $this->db->where('P.SaleID',$SaleID);
 			$query 	=	$this->db->get();
 			$result =	$query->row_array();

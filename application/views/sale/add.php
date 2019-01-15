@@ -111,7 +111,7 @@
 							<div class="form-group">
 								<label class="control-label mb-10">Customer</label>
 								<select class="form-control select2" name="CustomerID" id="CustomerID" required="required" onchange="CheckOrder();">
-									<option value="">Chose a Supplier</option>
+									<option value="">Chose a Customer</option>
 									
 <?php
 					foreach($Customer as $Cust)
@@ -217,7 +217,7 @@
 						<div class="row">
 
 						
-						<div class="col-sm-2">
+						<div class="col-sm-3">
 							<div class="input-group has-primary">
 				                <div class="input-group-btn">
 				                  <button type="button" class="btn btn-primary" >Total</button>
@@ -229,7 +229,7 @@
 				          
 
 
-				          <div class="col-sm-2">
+				          <div class="col-sm-3">
 							<div class="input-group has-primary">
 				                <div class="input-group-btn">
 				                  <button type="button" class="btn btn-primary">Vat </button>
@@ -239,7 +239,7 @@
 				          </div>
 
 
-				        <div class="col-sm-2">
+				        <div class="col-sm-3">
 							<div class="input-group has-primary">
 				                <div class="input-group-btn">
 				                  <button type="button" class="btn btn-primary">Discount</button>
@@ -259,14 +259,7 @@
 				              </div>
 				          </div>
 
-                            <div class="col-sm-3">
-                                <div class="input-group has-success">
-                                    <div class="input-group-btn">
-                                        <button type="button" class="btn btn-success"  >Pay now</button>
-                                    </div>
-                                    <input type="text" class="form-control" id="PaidAmount" name="PaidAmount"  style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;" onkeyup="GrandTotal();" value="0.00" >
-                                </div>
-                            </div>
+
 
 
 
@@ -278,6 +271,45 @@
 
 
 						</div>
+
+                        <div class="row">
+                            <br>
+                            <div class="col-sm-7">
+
+                            </div>
+
+                            <div class="col-sm-2">
+                                <div class="input-group has-success">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-success"  >Pay to </button>
+                                    </div>
+                                    <select class="form-control" name="PaymentAccountID" id="PaymentAccountID" required="required">
+
+                                        <?php
+                                        foreach($Accounts as $Ac)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $Ac['PaymentAccountID']; ?>" <?php echo (isset($PaymentAccountID) && $PaymentAccountID == $Ac['PaymentAccountID'])?'selected':''; ?> ><?php echo $Ac['PaymentAccountName']; ?></option>
+
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-3">
+                                <div class="input-group has-success">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-success"  >Pay now</button>
+                                    </div>
+                                    <input type="text" class="form-control" id="PaidAmount" name="PaidAmount"  style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;" onkeyup="GrandTotal();" value="0.00" >
+                                </div>
+                            </div>
+
+
+                        </div>
+
 
                         <div class="row">
 

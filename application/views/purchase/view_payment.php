@@ -3,7 +3,7 @@
 ?>
 													<div class="modal-header">
 														<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-														<h5 class="modal-title" >New advance of <?php echo $CustomerName; ?></h5>
+														<h5 class="modal-title" >New payment of <?php echo $SupplierName; ?></h5>
 													</div>
 													    
 													    <div class="row">
@@ -21,9 +21,9 @@
 
 																					<div class="form-group ">
 																						<label class="control-label mb-10 text-left">Amount</label>
-																						<input type="text" class="form-control" id="Amount" name="Amount" placeholder="Amount" required="required" >
-																						<input type="hidden" name="OrderFormID" value="<?php echo $OrderFormID; ?>">
-																						<input type="hidden" name="CustomerID" value="<?php echo $CustomerID; ?>">
+																						<input type="text" class="form-control" id="PopAmount" name="PopAmount" placeholder="Amount" required="required" >
+																						<input type="hidden" name="PurchaseID" value="<?php echo $PurchaseID; ?>">
+																						<input type="hidden" name="SupplierID" value="<?php echo $SupplierID; ?>">
 																						<input type="hidden" name="ReferenceNo" value="<?php echo $ReferenceNo; ?>">
 																					</div>
 
@@ -38,8 +38,8 @@
 													</div>
 													<div class="modal-footer">
 
-														<button type="button" class="btn btn-primary btn-outline btn-icon left-icon" onclick="InsertAdvance(<?php echo $OrderFormID; ?>);"> 
-															<i class="fa fa-plus"></i><span> Add Advance</span> 
+														<button type="button" class="btn btn-primary btn-outline btn-icon left-icon" onclick="InsertPayment(<?php echo $PurchaseID; ?>);">
+															<i class="fa fa-plus"></i><span> Add Payment</span>
 														</button>
 
 													</div>
@@ -52,7 +52,7 @@
 
 											<div class="modal-header">
 														<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-														<h5 class="modal-title" >Advance amount of <?php echo $CustomerName; ?></h5>
+														<h5 class="modal-title" >Advance amount of <?php echo $SupplierName; ?></h5>
 													</div>
 													    
 													    <div class="row">
@@ -77,9 +77,9 @@
 																				$Balance 	=	$Balance-$Item['Amount'];
 ?>
 													    							<tr id="<?php echo $Item['PaymentID'];?>">
-													    								<td>Paid advance on <?php echo date('d M Y',strtotime($Item['PaymentDate'])); ?></td>
+													    								<td> <?php echo (!empty($Item['OrderFormID']))?'Paid advance on ':' Sale amount on '; echo date('d M Y',strtotime($Item['PaymentDate'])); ?></td>
 													    								<td class="text-right"><?php echo number_format($Item['Amount'],2); ?></td>
-													    								<td><a href="#" onclick="DeleteAdvance(<?php echo $Item['PaymentID']; ?>,<?php echo $Item['Amount']; ?>);" data-toggle="tooltip" data-original-title="Close"> 
+													    								<td><a href="#" onclick="DeletePayment(<?php echo $Item['PaymentID']; ?>,<?php echo $Item['Amount']; ?>);" data-toggle="tooltip" data-original-title="Close">
 													    									<i class="fa fa-close text-danger"></i> </a> </td></td>
 													    							</tr>
 													                               
@@ -92,7 +92,7 @@
 													        							<th><strong>Balance Amount is </strong></th>
 													        							<th class="text-right"><strong id="BalanceAmountDiv"><?php echo number_format($Balance,2); ?></strong></th>
 													        							<th></th>
-																						<input type="hidden" name="BalanceAmount" id="BalanceAmount" value="<?php echo $Balance; ?>">
+																						<input type="hidden" name="BalanceAmountPop" id="BalanceAmountPop" value="<?php echo $Balance; ?>">
 													                                </tr>
 													    						</tfoot>
 													    					</table>
@@ -105,8 +105,8 @@
 													</div>
 													<div class="modal-footer">
 
-														<button type="button" class="btn btn-primary btn-outline btn-icon left-icon" onclick="AddMoreAdvance(<?php echo $OrderFormID; ?>,<?php echo $CustomerID; ?>,'<?php echo $ReferenceNo; ?>');">
-															<i class="fa fa-plus"></i><span> Add more Advance</span> 
+														<button type="button" class="btn btn-primary btn-outline btn-icon left-icon" onclick="MakeNewPayment(<?php echo $PurchaseID; ?>,<?php echo $SupplierID; ?>,'<?php echo ''.$ReferenceNo; ?>');">
+															<i class="fa fa-plus"></i><span> Make new payment</span>
 														</button>
 
 													</div>
@@ -116,8 +116,11 @@
 
 
 <script type="text/javascript">
-	
-		function DeleteAdvance(PaymentID,Amount)
+
+
+
+
+		function DeletePayment(PaymentID,Amount)
 		{
 
 			swal({   
@@ -133,17 +136,24 @@
 		        }, function(isConfirm){   
 		            if (isConfirm) {
 		            	$.ajax({
-					      url: '<?php echo base_url()."order/delete_advance";?>',
+					      url: '<?php echo base_url()."purchase/delete_payment";?>',
 					      type: 'post',
 					      data: { PaymentID: PaymentID},
 					      success: function(data) {
 					      	if(data == true)
 					      	{
+					      		let BalanceAmountPop 	=	$('#BalanceAmountPop').val();
+                                BalanceAmountPop 		=	parseInt(BalanceAmountPop)+parseInt(Amount);
+					      		$('#BalanceAmountPop').val(BalanceAmountPop);
+					      		$('#BalanceAmountDiv').html(BalanceAmountPop.toFixed(2));
+
+					      		//$('table#TableData tr#'+id).remove();
 					      		$('table#TableData tr#'+PaymentID).hide('slow', function(){ $('table#TableData tr#'+PaymentID).remove(); });
-					      		var BalanceAmount 	=	$('#BalanceAmount').val();
-					      		BalanceAmount 		=	parseInt(BalanceAmount)+parseInt(Amount);
-					      		$('#BalanceAmount').val(BalanceAmount);
-					      		$('#BalanceAmountDiv').html(BalanceAmount.toFixed(2));
+					      		let PaidAmount 	=	$('#PaidAmount').val();
+                                PaidAmount 	=	parseInt(PaidAmount)-parseInt(Amount);
+					      		$('#PaidAmount').val(PaidAmount.toFixed(2));
+					      		GrandTotal();
+
 					      		swal("Deleted!", "Your file has been deleted.", "success");
 					      	}
 					      	else
@@ -165,15 +175,15 @@
 				
 		}
 
-		function AddMoreAdvance(OrderFormID,CustomerID,ReferenceNo)
+		function MakeNewPayment(PurchaseID,SupplierID,ReferenceNo)
 		{
-			//alert(OrderFormID);
+			//alert(PurchaseID);
 			$.ajax({
-		      url: '<?php echo base_url()."order/add_advance_list";?>',
+		      url: '<?php echo base_url()."purchase/add_payment";?>',
 		      type: 'post',
-		      data: { OrderFormID: OrderFormID,CustomerID: CustomerID,ReferenceNo: ReferenceNo},
+		      data: { PurchaseID: PurchaseID,SupplierID: SupplierID,ReferenceNo: ReferenceNo},
 		      success: function(data) {
-		      		$('#AdModalContent').html(data);
+		      		$('#OFModalContent').html(data);
         
 		      },
 		      error: function(xhr, desc, err) {
@@ -183,18 +193,22 @@
 			}); // end ajax call   
 		}
 
-		function InsertAdvance(OrderFormID)
+		function InsertPayment(PurchaseID)
 		{
 			var PaymentDate 	=	$('#PaymentDate').val();
-			var Amount 			=	$('#Amount').val();
+			var Amount 			=	$('#PopAmount').val();
 
 
 			$.ajax({
-		      url: '<?php echo base_url()."order/insert_advance_list";?>',
+		      url: '<?php echo base_url()."purchase/insert_payment";?>',
 		      type: 'post',
-		      data: { OrderFormID: OrderFormID,PaymentDate: PaymentDate,Amount: Amount},
+		      data: { PurchaseID: PurchaseID,PaymentDate: PaymentDate,Amount: Amount},
 		      success: function(data) {
-		      		$('#AdModalContent').html(data);  
+		      		$('#OFModalContent').html(data);  
+		      		let PaidAmount 	=	$('#PaidAmount').val();
+                    PaidAmount 	=	parseInt(PaidAmount)+parseInt(Amount);
+		      		$('#PaidAmount').val(PaidAmount.toFixed(2));
+		      		GrandTotal();  
 		      },
 		      error: function(xhr, desc, err) {
 		        console.log(xhr);

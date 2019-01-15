@@ -83,6 +83,9 @@
 			$TotalAmount 	=	$data['TotalAmount'];
 			$ItemNo 		=	$data['ItemNo'];
 
+            $PaidAmount 	=	!empty($data['PaidAmount'])?$data['PaidAmount']:0;
+            $PaymentAccountID	=	$data['PaymentAccountID'];
+
 			$array 		=	array('ReferenceNo'=>$ReferenceNo,'SupplierID'=>$SupplierID,'PurchaseDate'=>$PurchaseDate,'WarehouseID'=>$WarehouseID,'Amount'=>$Amount,'TaxRate'=>$TaxRate,'TaxAmount'=>$TaxAmount,'Discount'=>$Discount,'TotalAmount'=>$TotalAmount,'ItemNo'=>$ItemNo);
 			$result 	=	$this->db->insert('purchase',$array);
 			
@@ -139,12 +142,14 @@
 				$this->stock_insert($StockQuantity,$ProductID,$ProductBatchID);
 				
 			}	
-			//for payment
-/*			if($TotalAmount != 0)
-			{
-				$payarray 		=	array('Type'=>'given','PaymentTypeID'=>3,'PaymentDate'=>$PurchaseDate,'ReferenceNo'=>$ReferenceNo,'PurchaseID'=>$PurchaseID,'Amount'=>$TotalAmount,'SupplierID'=>$SupplierID);
-				$this->db->insert('payment',$payarray);
-			}*/
+
+            //for payment against sale
+            if($PaidAmount != 0)
+            {
+                $payarray 		=	array('Type'=>'given','PaymentTypeID'=>3,'PaymentDate'=>$PurchaseDate,'ReferenceNo'=>$ReferenceNo,'PurchaseID'=>$PurchaseID,'Amount'=>$PaidAmount,'SupplierID'=>$SupplierID,'PaymentAccountID'=>$PaymentAccountID);
+                $this->db->insert('payment',$payarray);
+            }
+
 			return($result);
 			
 		}
@@ -335,10 +340,12 @@
 
 		function view()
 		{
-			$this->db->select('S.PurchaseID,S.ReferenceNo,S.PurchaseDate,S.TotalAmount,A.SupplierName,W.WarehouseName');
+			$this->db->select('S.PurchaseID,S.ReferenceNo,S.PurchaseDate,S.TotalAmount,A.SupplierName,W.WarehouseName,SUM(P.Amount) as PaidAmount');
 			$this->db->from('purchase S');
 			$this->db->join('supplier A','A.SupplierID = S.SupplierID','left');
 			$this->db->join('warehouse W','W.WarehouseID = S.WarehouseID','left');
+            $this->db->join('payment P','S.PurchaseID = P.PurchaseID','left');
+            $this->db->group_by('S.PurchaseID');
 			$query 	=	$this->db->get();
 			$result =	$query->result_array();
 			return($result);
@@ -353,12 +360,22 @@
 			return($result);
 		}
 
+        function view_payment_accounts()
+        {
+            $this->db->select('PaymentAccountID,PaymentAccountName');
+            $this->db->from('payment_account');
+            $query 	=	$this->db->get();
+            $result =	$query->result_array();
+            return($result);
+        }
+
 		function view_single($PurchaseID)
 		{
-			$this->db->select('P.PurchaseID,P.ReferenceNo,P.PurchaseDate,P.TotalAmount,P.SupplierID,P.WarehouseID,P.Discount,P.Amount,P.TaxRate,P.TaxAmount,P.ItemNo,S.SupplierName,S.SupplierPhone');
+			$this->db->select('P.PurchaseID,P.ReferenceNo,P.PurchaseDate,P.TotalAmount,P.SupplierID,P.WarehouseID,P.Discount,P.Amount,P.TaxRate,P.TaxAmount,P.ItemNo,S.SupplierName,S.SupplierPhone,sum(A.Amount) as PaidAmount');
 			$this->db->from('purchase P');
 			$this->db->join('supplier S','S.SupplierID = P.SupplierID','left');
-			$this->db->where('PurchaseID',$PurchaseID);
+            $this->db->join('payment A','A.PurchaseID = P.PurchaseID','left');
+			$this->db->where('P.PurchaseID',$PurchaseID);
 			$query 	=	$this->db->get();
 			$result =	$query->row_array();
 			return($result);
@@ -386,8 +403,53 @@
 			return($result);
 		}
 
+        function view_purchase_supplier($PurchaseID)
+        {
+            $this->db->select('O.PurchaseID,O.ReferenceNo,C.SupplierName,C.SupplierPhone,C.SupplierID,O.TotalAmount');
+            $this->db->from('purchase O');
+            $this->db->join('supplier C','C.SupplierID = O.SupplierID','left');
+            $this->db->where('O.PurchaseID',$PurchaseID);
+            $query 	=	$this->db->get();
+            $result =	$query->row_array();
+            return($result);
+        }
 
-	}
+        function view_payments($PurchaseID)
+        {
+            $this->db->select('PaymentDate,Amount,PaymentID,OrderFormID');
+            $this->db->from('payment');
+            $this->db->where('PurchaseID',$PurchaseID);
+            $this->db->where('PaymentTypeID','3');
+            $query =	$this->db->get();
+            $result =	$query->result_array();
+            return($result);
+        }
+        function delete_payment($PaymentID)
+        {
+            $this->db->where('PaymentID',$PaymentID);
+            $result = $this->db->delete('payment');
+            return($result);
+        }
+
+        function insert_payment($PurchaseID,$PaymentDate,$Amount,$ReferenceNo,$SupplierID)
+        {
+            $payarray 		=	array('Type'=>'given','PaymentTypeID'=>3,'PaymentDate'=>$PaymentDate,'ReferenceNo'=>$ReferenceNo,'PurchaseID'=>$PurchaseID,'Amount'=>$Amount,'SupplierID'=>$SupplierID);
+            $this->db->insert('payment',$payarray);
+        }
+
+
+        function view_supplier_name($SupplierID)
+        {
+            $this->db->select('SupplierName');
+            $this->db->from('supplier');
+            $this->db->where('SupplierID',$SupplierID);
+            $query =	$this->db->get();
+            $result =	$query->row_array();
+            return($result['SupplierName']);
+        }
+
+
+    }
 	
 	
 ?>

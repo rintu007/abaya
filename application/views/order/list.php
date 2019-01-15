@@ -148,7 +148,7 @@
 						
 
 
-													<td > 
+													<td onclick="ShowOrderForm(<?php echo $item['OrderFormID'];?>);" style="cursor: pointer;">
 
 <?php 								if($item['Status'] == 'new')
 									{

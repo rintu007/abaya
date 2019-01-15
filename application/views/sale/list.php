@@ -131,8 +131,9 @@
 													<th>Customer </th>
 													<th>Date</th>
 													<th>Amount</th>
-													
-													<th class="text-nowrap">Action</th>
+                                                      <th >Payment Status</th>
+
+                                                      <th class="text-nowrap">Action</th>
 												  </tr>
 												</thead>
 												<tbody>
@@ -147,8 +148,38 @@
 													<td onclick="ShowSale(<?php echo $item['SaleID'];?>);" style="cursor: pointer;"><?php echo date('d-m-Y',strtotime($item['SaleDate'])); ?></td>
 													<td onclick="ShowSale(<?php echo $item['SaleID'];?>);" style="cursor: pointer;"><?php echo number_format($item['TotalAmount'],2); ?></td>
 
-																							
+                                                      <td onclick="ShowSale(<?php echo $item['SaleID'];?>);" style="cursor: pointer;">
+
+<?php                                                   $BalanceAmount = $item['TotalAmount']-$item['PaidAmount'];
+                                                        if($item['PaidAmount'] == 0)
+                                                          {
+                                                              ?>
+                                                              <span class="label label-danger">pending</span>
+                                                              <?php
+                                                          }
+                                                          else if($item['TotalAmount'] > $item['PaidAmount'])
+                                                          {
+                                                              ?>
+                                                              <span class="label label-warning">Partial</span>
+                                                              <?php
+                                                          }
+                                                          else if($item['TotalAmount'] < $item['PaidAmount'])
+                                                          {
+                                                              ?>
+                                                              <span class="label label-primary">More paid</span>
+                                                          <?php								}
+                                                          else
+                                                          {
+                                                              ?>
+                                                              <span class="label label-success">paid</span>
+                                                              <?php
+                                                          }
+?>
+                                                      </td>
+
 													<td class="text-nowrap">
+
+                                                        <a href="#" onclick="TotalAmountClick(<?php echo $item['SaleID']; ?>);" data-toggle="tooltip" class="mr-25" > <i class="fa fa-dollar text-success "></i> </a>
 
 														<a href="<?php echo base_url().'sale/edit/'.$item['SaleID']; ?>" class="mr-25" data-toggle="tooltip" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> 
 														</a> 
@@ -184,6 +215,19 @@
 						<!-- /.modal-dialog -->
 					</div>
 					<!-- /.modal -->
+
+
+                    <!-- MOdal for Order View -->
+                    <div id="AdModal" class="modal fade   " tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+                        <div class="modal-dialog ">
+                            <div class="modal-content " id="AdModalContent">
+
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.modal -->
 
 					
 
@@ -238,7 +282,26 @@
 
 
 	<script type="text/javascript">
-		
+
+
+        function TotalAmountClick(SaleID)
+        {
+            $.ajax({
+                url: '<?php echo base_url()."sale/view_payment_list";?>',
+                type: 'post',
+                data: { SaleID: SaleID},
+                success: function(data) {
+                    $('#AdModalContent').html(data);
+                    $('#AdModal').modal('toggle');
+                },
+                error: function(xhr, desc, err) {
+                    console.log(xhr);
+                    console.log("Details: " + desc + "\nError:" + err);
+                }
+            }); // end ajax call
+        }
+
+
 		function ShowSale(SaleID)
 		{
 			//alert(SaleID);

@@ -29,7 +29,7 @@ class sale extends CI_Controller
 	{
 		$data['title']	=	'Sales';
 		$data['items']	=	$this->m_sale->view();
-
+       // print_r($data['items']);exit;
 		$this->load->view('sale/list',$data);
 	}
 
@@ -38,6 +38,10 @@ class sale extends CI_Controller
 		$_SESSION['SubActive']		=	"add_sale";
 
 		$data['Customer']	=	$this->m_sale->view_customer();
+
+        $data['Accounts']	=	$this->m_sale->view_payment_accounts();
+        $data['PaymentAccountID']		=	1;
+
 		$data['title']		=	'Sales';
 		$data['mode']		=	'add';
 		$this->load->view('sale/add',$data);		
@@ -240,6 +244,16 @@ class sale extends CI_Controller
         $this->load->view('sale/view_payment',$data);
     }
 
+    //for add and view payment from order list page
+    function view_payment_list()
+    {
+        $SaleID 	=	$_POST['SaleID'];
+        $data			=	$this->m_sale->view_sale_customer($SaleID);
+        $data['Type']	=	'view';
+        $data['Payments']	=	$this->m_sale->view_payments($SaleID);
+        $this->load->view('sale/view_payment_list',$data);
+    }
+
 
     function view_advance(){
         $CustomerID 	=	$_POST['CustomerID'];
@@ -268,6 +282,17 @@ class sale extends CI_Controller
         $this->load->view('sale/view_payment',$data);
     }
 
+    function add_payment_list()
+    {
+        $data['SaleID'] 	    =	$_POST['SaleID'];
+        $data['CustomerID'] 	=	$_POST['CustomerID'];
+        $data['ReferenceNo'] 	=	$_POST['ReferenceNo'];
+        $data['CustomerName'] 	=	$this->m_sale->view_cutomer_name($_POST['CustomerID']);;
+        $data['Type']	=	'add';
+        $this->load->view('sale/view_payment_list',$data);
+    }
+
+
     function insert_payment()
     {
         $SaleID 	    =	$_POST['SaleID'];
@@ -285,11 +310,28 @@ class sale extends CI_Controller
         $this->load->view('sale/view_payment',$data);
     }
 
+    function insert_payment_list()
+    {
+        $SaleID 	    =	$_POST['SaleID'];
+        $PaymentDate 	=	$_POST['PaymentDate'];
+        $Amount 		=	$_POST['Amount'];
+
+        $data			=	$this->m_sale->view_sale_customer($SaleID);
+        $ReferenceNo	=	$data['ReferenceNo'];
+        $CustomerID 	=	$data['CustomerID'];
+        $this->m_sale->insert_payment($SaleID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID);
+
+
+        $data['Payments']	=	$this->m_sale->view_payments($SaleID);
+        $data['Type']	=	'view';
+        $this->load->view('sale/view_payment_list',$data);
+    }
+
 
     function delete_payment()
     {
         $PaymentID 	=	$_POST['PaymentID'];
-        $result =	$this->m_sale->delete_advance($PaymentID);
+        $result =	$this->m_sale->delete_payment($PaymentID);
         echo $result;
     }
 
@@ -318,7 +360,6 @@ class sale extends CI_Controller
 		{
 			$this->m_sale->cancel_sale($Item['OrderItemID']);
 		}
-		
 
 		$result =	$this->m_sale->delete($SaleID);
 		echo $result;

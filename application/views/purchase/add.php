@@ -218,9 +218,9 @@
 															<th>Barcode</th>
 															<th>Name</th>
 															<th>Unit</th>
-															<th>Amount</th>
+															<th>Rate</th>
 															<th>QTY</th>
-															<th>Total</th>
+															<th>Amount</th>
 														</tr>
 													</thead>
 													<tbody>
@@ -245,10 +245,10 @@
 						<div class="row">
 
 						
-						<div class="col-sm-2">
-							<div class="input-group has-warning">
+						<div class="col-sm-3">
+							<div class="input-group has-primary">
 				                <div class="input-group-btn">
-				                  <button type="button" class="btn btn-warning" >Amount</button>
+				                  <button type="button" class="btn btn-primary" >Total</button>
 				                </div>
 				                <input type="text" class="form-control" id="Amount" name="Amount" readonly style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;">
 				              </div>
@@ -287,9 +287,9 @@
 
 
 				        <div class="col-sm-2">
-							<div class="input-group has-error">
+							<div class="input-group has-primary">
 				                <div class="input-group-btn">
-				                  <button type="button" class="btn btn-danger">Discount</button>
+				                  <button type="button" class="btn btn-primary">Discount</button>
 				                </div>
 				                <input type="text" class="form-control" id="Discount" name="Discount" onkeyup="GrandTotal();" style="font-size:13px; font-weight: bold;;text-align:right;">
 				              </div>
@@ -297,23 +297,99 @@
 
 			
 
-				          <div class="col-sm-2">
-							<div class="input-group has-success">
+				          <div class="col-sm-3">
+							<div class="input-group has-primary">
 				                <div class="input-group-btn">
-				                  <button type="button" class="btn btn-success" >Total</button>
+				                  <button type="button" class="btn btn-primary" >Subtotal</button>
 				                </div>
 				                <input type="text" class="form-control" id="TotalAmount" name="TotalAmount" readonly style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;">
 				              </div>
 				          </div>
 
-				          <div class="col-sm-2 pull-right">
-				          			<input type="hidden" name="ItemNo" id="ItemNo" value="1">
-									<button class="btn btn-primary  btn-rounded btn-block btn-anim" type="button" onclick="SubmitForm();"><i class="fa fa-check-square"></i><span class="btn-text">Submit</span></button>
-						
-							</div>
+
+
+
 
 
 						</div>
+
+
+                    <div class="row">
+                        <br>
+                        <div class="col-sm-7">
+
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="input-group has-success">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-success"  >Pay from </button>
+                                </div>
+                                <select class="form-control" name="PaymentAccountID" id="PaymentAccountID"  required="required">
+
+                                    <?php
+                                    foreach($Accounts as $Ac)
+                                    {
+                                        ?>
+                                        <option value="<?php echo $Ac['PaymentAccountID']; ?>" <?php echo (isset($PaymentAccountID) && $PaymentAccountID == $Ac['PaymentAccountID'])?'selected':''; ?> ><?php echo $Ac['PaymentAccountName']; ?></option>
+
+                                        <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-3">
+                            <div class="input-group has-success">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-success"  >Pay now</button>
+                                </div>
+                                <input type="text" class="form-control" id="PaidAmount" name="PaidAmount"  style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;" onkeyup="GrandTotal();" value="0.00" >
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <div class="row">
+                        <br>
+                        <div class="col-sm-9">
+
+                        </div>
+                        <div class="col-sm-3">
+                            <div class="input-group has-warning">
+                                <div class="input-group-btn">
+                                    <button type="button" class="btn btn-warning" >Balance</button>
+                                </div>
+                                <input type="text" class="form-control" id="BalanceAmount" name="BalanceAmount" readonly style="font-size:15px; font-weight: bold;text-align:right;background-color: #fff;">
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+
+
+
+
+                    <div class="row">
+                        <br>
+
+
+                        <div class="col-sm-10">
+
+                        </div>
+
+
+                        <div class="col-sm-2 pull-right">
+                            <input type="hidden" name="ItemNo" id="ItemNo" value="1">
+                            <button class="btn btn-primary  btn-rounded btn-block btn-anim" type="button" onclick="SubmitForm();"><i class="fa fa-check-square"></i><span class="btn-text">Submit</span></button>
+
+                        </div>
+
+                    </div>
 
 
 																								
@@ -761,6 +837,10 @@
 				TotalAmount 	=	TotalAmount.toFixed(2);
 				$('#TotalAmount').val(TotalAmount);
 
+                let PaidAmount =    parseFloat($('#PaidAmount').val());
+                let BalanceAmount = (TotalAmount-PaidAmount).toFixed(2);
+                $('#BalanceAmount').val(BalanceAmount);
+
 
 
 			}
@@ -787,6 +867,10 @@
 
 				TotalAmount 	=	TotalAmount.toFixed(2);
 				$('#TotalAmount').val(TotalAmount);
+
+                let PaidAmount =    parseFloat($('#PaidAmount').val());
+                let BalanceAmount = (TotalAmount-PaidAmount).toFixed(2);
+                $('#BalanceAmount').val(BalanceAmount);
 
 
 
