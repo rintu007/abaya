@@ -279,10 +279,19 @@
 	<script src="<?php echo base_url();?>vendors/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
 	<script src="<?php echo base_url();?>vendors/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
 	<script src="<?php echo base_url();?>vendors/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-	<script src="<?php echo base_url();?>dist/js/responsive-datatable-data.js"></script>
+
 
 
 	<script type="text/javascript">
+
+
+        "use strict";
+        $(document).ready(function() {
+            $('#TableData').DataTable( {
+                responsive: true,
+                "aaSorting": []
+            } );
+        } );
 
 
         function TotalAmountClick(PurchaseID)

@@ -443,8 +443,9 @@
 
         function view_payments($SaleID)
         {
-            $this->db->select('PaymentDate,Amount,PaymentID,OrderFormID');
-            $this->db->from('payment');
+            $this->db->select('P.PaymentDate,P.Amount,P.PaymentID,P.SaleID,A.PaymentAccountName');
+            $this->db->from('payment P');
+            $this->db->join('payment_account A','A.PaymentAccountID = P.PaymentAccountID','left');
             $this->db->where('SaleID',$SaleID);
             $this->db->where('PaymentTypeID','2');
             $query =	$this->db->get();
@@ -592,9 +593,9 @@
             return($result['CustomerName']);
         }
 
-        function insert_payment($SaleID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID)
+        function insert_payment($SaleID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID,$PaymentAccountID)
         {
-            $payarray 		=	array('Type'=>'received','PaymentTypeID'=>2,'PaymentDate'=>$PaymentDate,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID,'Amount'=>$Amount,'CustomerID'=>$CustomerID);
+            $payarray 		=	array('Type'=>'received','PaymentTypeID'=>2,'PaymentDate'=>$PaymentDate,'ReferenceNo'=>$ReferenceNo,'SaleID'=>$SaleID,'Amount'=>$Amount,'CustomerID'=>$CustomerID,'PaymentAccountID'=>$PaymentAccountID);
             $this->db->insert('payment',$payarray);
         }
 

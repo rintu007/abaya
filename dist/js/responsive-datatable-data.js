@@ -1,6 +1,6 @@
 /*Responsive Datatable Init*/
 
-"use strict"; 
+"use strict";
 
 $(document).ready(function() {
 	$('#myTable1').DataTable( {

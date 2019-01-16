@@ -19,9 +19,27 @@
 																						<input type="date" class="form-control" id="PaymentDate" name="PaymentDate" value="<?php echo date('Y-m-d'); ?>"required="required" >
 																					</div>
 
+                                                                                    <div class="form-group ">
+                                                                                        <label class="control-label mb-10 text-left">Pay to</label>
+
+                                                                                        <select class="form-control" name="PaymentAccountID" id="PaymentAccountID"  required="required">
+
+                                                                                            <?php
+                                                                                            foreach($Accounts as $Ac)
+                                                                                            {
+                                                                                                ?>
+                                                                                                <option value="<?php echo $Ac['PaymentAccountID']; ?>" <?php echo (isset($PaymentAccountID) && $PaymentAccountID == $Ac['PaymentAccountID'])?'selected':''; ?> ><?php echo $Ac['PaymentAccountName']; ?></option>
+
+                                                                                                <?php
+                                                                                            }
+                                                                                            ?>
+                                                                                        </select>
+
+                                                                                    </div>
+
 																					<div class="form-group ">
 																						<label class="control-label mb-10 text-left">Amount</label>
-																						<input type="text" class="form-control" id="Amount" name="Amount" placeholder="Amount" required="required" >
+																						<input type="text" class="form-control" id="PopAmount" name="PopAmount" placeholder="Amount" required="required" >
 																						<input type="hidden" name="OrderFormID" value="<?php echo $OrderFormID; ?>">
 																						<input type="hidden" name="CustomerID" value="<?php echo $CustomerID; ?>">
 																						<input type="hidden" name="ReferenceNo" value="<?php echo $ReferenceNo; ?>">
@@ -77,8 +95,8 @@
 																				$Balance 	=	$Balance-$Item['Amount'];
 ?>
 													    							<tr id="<?php echo $Item['PaymentID'];?>">
-													    								<td>Paid advance on <?php echo date('d M Y',strtotime($Item['PaymentDate'])); ?></td>
-													    								<td class="text-right"><?php echo number_format($Item['Amount'],2); ?></td>
+                                                                                        <td>  Paid advance by <?php echo $Item['PaymentAccountName']; ?> on <?php echo date('d M Y',strtotime($Item['PaymentDate'])); ?></td>
+                                                                                        <td class="text-right"><?php echo number_format($Item['Amount'],2); ?></td>
 													    								<td><a href="#" onclick="DeleteAdvance(<?php echo $Item['PaymentID']; ?>,<?php echo $Item['Amount']; ?>);" data-toggle="tooltip" data-original-title="Close"> 
 													    									<i class="fa fa-close text-danger"></i> </a> </td></td>
 													    							</tr>
@@ -193,13 +211,14 @@
 		function InsertAdvance(OrderFormID)
 		{
 			var PaymentDate 	=	$('#PaymentDate').val();
-			var Amount 			=	$('#Amount').val();
+			var Amount 			=	$('#PopAmount').val();
+			let PaymentAccountID = $('#PaymentAccountID').val();
 
 
 			$.ajax({
 		      url: '<?php echo base_url()."order/insert_advance";?>',
 		      type: 'post',
-		      data: { OrderFormID: OrderFormID,PaymentDate: PaymentDate,Amount: Amount},
+		      data: { OrderFormID: OrderFormID,PaymentDate: PaymentDate,Amount: Amount,PaymentAccountID : PaymentAccountID},
 		      success: function(data) {
 		      		$('#OFModalContent').html(data);  
 		      		var AdvanceAmount 	=	$('#AdvanceAmount').val();

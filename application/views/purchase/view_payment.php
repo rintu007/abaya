@@ -20,12 +20,30 @@
 																					</div>
 
 																					<div class="form-group ">
-																						<label class="control-label mb-10 text-left">Amount</label>
-																						<input type="text" class="form-control" id="PopAmount" name="PopAmount" placeholder="Amount" required="required" >
-																						<input type="hidden" name="PurchaseID" value="<?php echo $PurchaseID; ?>">
-																						<input type="hidden" name="SupplierID" value="<?php echo $SupplierID; ?>">
-																						<input type="hidden" name="ReferenceNo" value="<?php echo $ReferenceNo; ?>">
+																						<label class="control-label mb-10 text-left">Pay from</label>
+
+                                                                                        <select class="form-control" name="PaymentAccountID" id="PaymentAccountID"  required="required">
+
+                                                                                            <?php
+                                                                                            foreach($Accounts as $Ac)
+                                                                                            {
+                                                                                                ?>
+                                                                                                <option value="<?php echo $Ac['PaymentAccountID']; ?>" <?php echo (isset($PaymentAccountID) && $PaymentAccountID == $Ac['PaymentAccountID'])?'selected':''; ?> ><?php echo $Ac['PaymentAccountName']; ?></option>
+
+                                                                                                <?php
+                                                                                            }
+                                                                                            ?>
+                                                                                        </select>
+
 																					</div>
+
+                                                                                    <div class="form-group ">
+                                                                                        <label class="control-label mb-10 text-left">Amount</label>
+                                                                                        <input type="text" class="form-control" id="PopAmount" name="PopAmount" placeholder="Amount" required="required" >
+                                                                                        <input type="hidden" name="PurchaseID" value="<?php echo $PurchaseID; ?>">
+                                                                                        <input type="hidden" name="SupplierID" value="<?php echo $SupplierID; ?>">
+                                                                                        <input type="hidden" name="ReferenceNo" value="<?php echo $ReferenceNo; ?>">
+                                                                                    </div>
 
 																				</form>
 																			</div>
@@ -77,8 +95,8 @@
 																				$Balance 	=	$Balance-$Item['Amount'];
 ?>
 													    							<tr id="<?php echo $Item['PaymentID'];?>">
-													    								<td> <?php echo (!empty($Item['OrderFormID']))?'Paid advance on ':' Sale amount on '; echo date('d M Y',strtotime($Item['PaymentDate'])); ?></td>
-													    								<td class="text-right"><?php echo number_format($Item['Amount'],2); ?></td>
+                                                                                        <td>  Paid by <?php echo $Item['PaymentAccountName']; ?> on <?php echo date('d M Y',strtotime($Item['PaymentDate'])); ?></td>
+                                                                                        <td class="text-right"><?php echo number_format($Item['Amount'],2); ?></td>
 													    								<td><a href="#" onclick="DeletePayment(<?php echo $Item['PaymentID']; ?>,<?php echo $Item['Amount']; ?>);" data-toggle="tooltip" data-original-title="Close">
 													    									<i class="fa fa-close text-danger"></i> </a> </td></td>
 													    							</tr>
@@ -196,13 +214,14 @@
 		function InsertPayment(PurchaseID)
 		{
 			var PaymentDate 	=	$('#PaymentDate').val();
-			var Amount 			=	$('#PopAmount').val();
+            var Amount 			=	$('#PopAmount').val();
+            var PaymentAccountID 			=	$('#PaymentAccountID').val();
 
 
 			$.ajax({
 		      url: '<?php echo base_url()."purchase/insert_payment";?>',
 		      type: 'post',
-		      data: { PurchaseID: PurchaseID,PaymentDate: PaymentDate,Amount: Amount},
+		      data: { PurchaseID: PurchaseID,PaymentDate: PaymentDate,Amount: Amount,PaymentAccountID: PaymentAccountID},
 		      success: function(data) {
 		      		$('#OFModalContent').html(data);  
 		      		let PaidAmount 	=	$('#PaidAmount').val();

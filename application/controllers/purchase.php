@@ -151,6 +151,10 @@ class purchase extends CI_Controller
         $data['SupplierID'] 	=	$_POST['SupplierID'];
         $data['ReferenceNo'] 	=	$_POST['ReferenceNo'];
         $data['SupplierName'] 	=	$this->m_purchase->view_supplier_name($_POST['SupplierID']);;
+
+        $data['Accounts']	=	$this->m_purchase->view_payment_accounts();
+        $data['PaymentAccountID']		=	1;
+
         $data['Type']	=	'add';
         $this->load->view('purchase/view_payment',$data);
     }
@@ -162,6 +166,10 @@ class purchase extends CI_Controller
         $data['ReferenceNo'] 	=	$_POST['ReferenceNo'];
         $data['SupplierName'] 	=	$this->m_purchase->view_supplier_name($_POST['SupplierID']);;
         $data['Type']	=	'add';
+
+        $data['Accounts']	=	$this->m_purchase->view_payment_accounts();
+        $data['PaymentAccountID']		=	1;
+
         $this->load->view('purchase/view_payment_list',$data);
     }
 
@@ -171,11 +179,12 @@ class purchase extends CI_Controller
         $PurchaseID 	    =	$_POST['PurchaseID'];
         $PaymentDate 	=	$_POST['PaymentDate'];
         $Amount 		=	$_POST['Amount'];
+        $PaymentAccountID 		=	$_POST['PaymentAccountID'];
 
         $data			=	$this->m_purchase->view_purchase_supplier($PurchaseID);
         $ReferenceNo	=	$data['ReferenceNo'];
         $SupplierID 	=	$data['SupplierID'];
-        $this->m_purchase->insert_payment($PurchaseID,$PaymentDate,$Amount,$ReferenceNo,$SupplierID);
+        $this->m_purchase->insert_payment($PurchaseID,$PaymentDate,$Amount,$ReferenceNo,$SupplierID,$PaymentAccountID);
 
 
         $data['Payments']	=	$this->m_purchase->view_payments($PurchaseID);
@@ -188,11 +197,12 @@ class purchase extends CI_Controller
         $PurchaseID 	    =	$_POST['PurchaseID'];
         $PaymentDate 	=	$_POST['PaymentDate'];
         $Amount 		=	$_POST['Amount'];
+        $PaymentAccountID 		=	$_POST['PaymentAccountID'];
 
         $data			=	$this->m_purchase->view_purchase_supplier($PurchaseID);
         $ReferenceNo	=	$data['ReferenceNo'];
         $SupplierID 	=	$data['SupplierID'];
-        $this->m_purchase->insert_payment($PurchaseID,$PaymentDate,$Amount,$ReferenceNo,$SupplierID);
+        $this->m_purchase->insert_payment($PurchaseID,$PaymentDate,$Amount,$ReferenceNo,$SupplierID,$PaymentAccountID);
 
 
         $data['Payments']	=	$this->m_purchase->view_payments($PurchaseID);

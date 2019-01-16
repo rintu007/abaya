@@ -78,28 +78,34 @@
 													                               
 <?php 																		}
 ?>													    							<tr>
-													    								<td class="thick-line"><?php /*<strong>Total Tax : </strong><?php echo number_format($TotalTax,2); ?> */ ?></td>
-													    								<td class="thick-line"><strong>Discount : </strong><?php echo number_format($Discount,2); ?></td>
-													    								<td class="thick-line"></td>
-													    								<td class="thick-line text-center"><strong>Total</strong></td>
-													    								<td class="thick-line text-right"><?php echo number_format($Amount,2); ?></td>
-													    							</tr>
-													    							<tr>
-													    								<td class="no-line"></td>
-													    								<td class="no-line"></td>
-													    								<td class="no-line"></td>
-		
-													    								<td class="no-line text-center"><strong>Tax</strong></td>
-													    								<td class="no-line text-right"><?php echo number_format($TaxAmount,2); ?></td>
-													    							</tr>
-													    							<tr>
-													    								<td class="no-line"></td>
-													    								<td class="no-line"></td>
-													    								<td class="no-line"></td>
-													    	
-													    								<td class="no-line text-center"><strong>Balance</strong></td>
-													    								<td class="no-line text-right"><?php echo number_format(($TotalAmount),2); ?></td>
-													    							</tr>
+                                                                                        <td class="thick-line"><strong>Total : </strong><?php echo number_format($Amount,2); ?> </td>
+                                                                                        <td class="thick-line"><strong>Total Tax : </strong><?php echo number_format($TaxAmount,2); ?> </td>
+                                                                                        <td class="thick-line"><strong>Discount : </strong><?php echo number_format($Discount,2); ?></td>
+
+                                                                                        <td class="thick-line text-center"><strong>Total Amount</strong></td>
+                                                                                        <td class="thick-line text-right"><?php echo number_format($TotalAmount,2); ?></td>
+                                                                                    </tr>
+
+                                                                                    <tr>
+                                                                                        <td class="no-line"></td>
+                                                                                        <td class="no-line"></td>
+                                                                                        <td class="no-line"></td>
+
+
+
+                                                                                        <td class="no-line text-center"><strong>Paid</strong></td>
+                                                                                        <td class="no-line text-right"><?php echo number_format($PaidAmount,2); ?></td>
+                                                                                    </tr>
+                                                                                    <tr>
+                                                                                        <td class="no-line"></td>
+                                                                                        <td class="no-line"></td>
+                                                                                        <td class="no-line"></td>
+
+
+
+                                                                                        <td class="no-line text-center"><strong>Balance</strong></td>
+                                                                                        <td class="no-line text-right"><?php echo number_format(($TotalAmount-$PaidAmount),2); ?></td>
+                                                                                    </tr>
 													    						</tbody>
 													    					</table>
 													    				</div>

@@ -258,6 +258,10 @@ class order extends CI_Controller
 		$data['ReferenceNo'] 	=	$_POST['ReferenceNo'];
 		$data['CustomerName'] 	=	$this->m_order->view_cutomer_name($_POST['CustomerID']);;
 		$data['Type']	=	'add';
+
+        $data['Accounts']	=	$this->m_order->view_payment_accounts();
+        $data['PaymentAccountID']		=	1;
+
 		$this->load->view('order/view_advance',$data);
 	}
 
@@ -266,11 +270,13 @@ class order extends CI_Controller
 		$OrderFormID 	=	$_POST['OrderFormID'];
 		$PaymentDate 	=	$_POST['PaymentDate'];
 		$Amount 		=	$_POST['Amount'];
+        $PaymentAccountID 		=	$_POST['PaymentAccountID'];
 
-		$data			=	$this->m_order->view_order_customer($OrderFormID);
+
+        $data			=	$this->m_order->view_order_customer($OrderFormID);
 		$ReferenceNo	=	$data['ReferenceNo'];
 		$CustomerID 	=	$data['CustomerID'];
-		$this->m_order->insert_advance($OrderFormID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID);
+		$this->m_order->insert_advance($OrderFormID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID,$PaymentAccountID);
 
 		
 		$data['Payments']	=	$this->m_order->view_payments($OrderFormID);
@@ -305,6 +311,10 @@ class order extends CI_Controller
 		$data['ReferenceNo'] 	=	$_POST['ReferenceNo'];
 		$data['CustomerName'] 	=	$this->m_order->view_cutomer_name($_POST['CustomerID']);;
 		$data['Type']	=	'add';
+
+        $data['Accounts']	=	$this->m_order->view_payment_accounts();
+        $data['PaymentAccountID']		=	1;
+
 		$this->load->view('order/view_advance_list',$data);
 	}
 
@@ -313,11 +323,13 @@ class order extends CI_Controller
 		$OrderFormID 	=	$_POST['OrderFormID'];
 		$PaymentDate 	=	$_POST['PaymentDate'];
 		$Amount 		=	$_POST['Amount'];
+        $PaymentAccountID 		=	$_POST['PaymentAccountID'];
 
-		$data			=	$this->m_order->view_order_customer($OrderFormID);
+
+        $data			=	$this->m_order->view_order_customer($OrderFormID);
 		$ReferenceNo	=	$data['ReferenceNo'];
 		$CustomerID 	=	$data['CustomerID'];
-		$this->m_order->insert_advance($OrderFormID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID);
+		$this->m_order->insert_advance($OrderFormID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID,$PaymentAccountID);
 
 		
 		$data['Payments']	=	$this->m_order->view_payments($OrderFormID);

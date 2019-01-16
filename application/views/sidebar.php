@@ -104,22 +104,55 @@
 				</li>
 
 				<li>
-					<a href="javascript:void(0);" data-toggle="collapse" data-target="#purchse_dr" <?php echo ($PageActive == 'purchase')?'class="active-page"':'';?>>
-						<div class="pull-left"><i class="fa fa-shopping-bag mr-20"></i><span class="right-nav-text">Purchase</span></div><div class="pull-right">
-					<i class="zmdi zmdi-caret-down"></i></div><div class="clearfix"></div></a>
-					<ul id="purchse_dr" class="collapse collapse-level-1">
-						<li>
-							<a href="<?php echo base_url().'purchase/add';?>" <?php echo ($SubActive == 'add_purchase')?'class="active-page"':'';?>">New Purchase</a>
-						</li>
-						<li>
-							<a href="<?php echo base_url().'purchase';?>" <?php echo ($SubActive == 'list_purchase')?'class="active-page"':'';?>">List Purchase</a>
-						</li>
-						<li>
-							<a href="#">Purchase Retrun</a>
-						</li>
-						
-					</ul>
-				</li>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#purchse_dr" <?php echo ($PageActive == 'purchase')?'class="active-page"':'';?>>
+                        <div class="pull-left"><i class="fa fa-shopping-bag mr-20"></i><span class="right-nav-text">Purchase</span></div><div class="pull-right">
+                            <i class="zmdi zmdi-caret-down"></i></div><div class="clearfix"></div></a>
+                    <ul id="purchse_dr" class="collapse collapse-level-1">
+                        <li>
+                            <a href="<?php echo base_url().'purchase/add';?>" <?php echo ($SubActive == 'add_purchase')?'class="active-page"':'';?>">New Purchase</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo base_url().'purchase';?>" <?php echo ($SubActive == 'list_purchase')?'class="active-page"':'';?>">List Purchase</a>
+                        </li>
+                        <li>
+                            <a href="#">Purchase Retrun</a>
+                        </li>
+
+                    </ul>
+                </li>
+
+                <li>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#expense_dr" <?php echo ($PageActive == 'expense')?'class="active-page"':'';?>>
+                        <div class="pull-left"><i class="fa fa-money mr-20"></i><span class="right-nav-text">Expense</span></div><div class="pull-right">
+                            <i class="zmdi zmdi-caret-down"></i></div><div class="clearfix"></div></a>
+                    <ul id="expense_dr" class="collapse collapse-level-1">
+                        <li>
+                            <a href="<?php echo base_url().'salary';?>" <?php echo ($SubActive == 'list_salary')?'class="active-page"':'';?>">Staff Salary</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo base_url().'expense';?>" <?php echo ($SubActive == 'list_expense')?'class="active-page"':'';?>">Other Expense</a>
+                        </li>
+
+
+                    </ul>
+                </li>
+
+
+                <li>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#equity_dr" <?php echo ($PageActive == 'equity')?'class="active-page"':'';?>>
+                        <div class="pull-left"><i class="fa fa-bank mr-20"></i><span class="right-nav-text">Equity</span></div><div class="pull-right">
+                            <i class="zmdi zmdi-caret-down"></i></div><div class="clearfix"></div></a>
+                    <ul id="equity_dr" class="collapse collapse-level-1">
+                        <li>
+                            <a href="<?php echo base_url().'equity/capital';?>" <?php echo ($SubActive == 'capital')?'class="active-page"':'';?>">Captal Amount</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo base_url().'equity/withdraw';?>" <?php echo ($SubActive == 'withdraw')?'class="active-page"':'';?>">Withdraw</a>
+                        </li>
+
+
+                    </ul>
+                </li>
 
 				
 

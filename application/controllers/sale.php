@@ -279,6 +279,10 @@ class sale extends CI_Controller
         $data['ReferenceNo'] 	=	$_POST['ReferenceNo'];
         $data['CustomerName'] 	=	$this->m_sale->view_cutomer_name($_POST['CustomerID']);;
         $data['Type']	=	'add';
+
+        $data['Accounts']	=	$this->m_sale->view_payment_accounts();
+        $data['PaymentAccountID']		=	1;
+
         $this->load->view('sale/view_payment',$data);
     }
 
@@ -289,6 +293,10 @@ class sale extends CI_Controller
         $data['ReferenceNo'] 	=	$_POST['ReferenceNo'];
         $data['CustomerName'] 	=	$this->m_sale->view_cutomer_name($_POST['CustomerID']);;
         $data['Type']	=	'add';
+
+        $data['Accounts']	=	$this->m_sale->view_payment_accounts();
+        $data['PaymentAccountID']		=	1;
+
         $this->load->view('sale/view_payment_list',$data);
     }
 
@@ -298,11 +306,12 @@ class sale extends CI_Controller
         $SaleID 	    =	$_POST['SaleID'];
         $PaymentDate 	=	$_POST['PaymentDate'];
         $Amount 		=	$_POST['Amount'];
+        $PaymentAccountID 		=	$_POST['PaymentAccountID'];
 
         $data			=	$this->m_sale->view_sale_customer($SaleID);
         $ReferenceNo	=	$data['ReferenceNo'];
         $CustomerID 	=	$data['CustomerID'];
-        $this->m_sale->insert_payment($SaleID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID);
+        $this->m_sale->insert_payment($SaleID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID,$PaymentAccountID);
 
 
         $data['Payments']	=	$this->m_sale->view_payments($SaleID);
@@ -315,11 +324,13 @@ class sale extends CI_Controller
         $SaleID 	    =	$_POST['SaleID'];
         $PaymentDate 	=	$_POST['PaymentDate'];
         $Amount 		=	$_POST['Amount'];
+        $PaymentAccountID 		=	$_POST['PaymentAccountID'];
+
 
         $data			=	$this->m_sale->view_sale_customer($SaleID);
         $ReferenceNo	=	$data['ReferenceNo'];
         $CustomerID 	=	$data['CustomerID'];
-        $this->m_sale->insert_payment($SaleID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID);
+        $this->m_sale->insert_payment($SaleID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID,$PaymentAccountID);
 
 
         $data['Payments']	=	$this->m_sale->view_payments($SaleID);

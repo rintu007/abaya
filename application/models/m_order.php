@@ -380,8 +380,9 @@
 
 		function view_payments($OrderFormID)
 		{
-			$this->db->select('PaymentDate,Amount,PaymentID');
-			$this->db->from('payment');
+            $this->db->select('P.PaymentDate,P.Amount,P.PaymentID,P.OrderFormID,A.PaymentAccountName');
+            $this->db->from('payment P');
+            $this->db->join('payment_account A','A.PaymentAccountID = P.PaymentAccountID','left');
 			$this->db->where('OrderFormID',$OrderFormID);
 			$this->db->where('PaymentTypeID','1');
 			$query =	$this->db->get();
@@ -389,9 +390,9 @@
 			return($result);
 		}
 
-		function insert_advance($OrderFormID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID)
+		function insert_advance($OrderFormID,$PaymentDate,$Amount,$ReferenceNo,$CustomerID,$PaymentAccountID)
 		{
-			$payarray 		=	array('Type'=>'received','PaymentTypeID'=>1,'PaymentDate'=>$PaymentDate,'ReferenceNo'=>$ReferenceNo,'OrderFormID'=>$OrderFormID,'Amount'=>$Amount,'CustomerID'=>$CustomerID);
+			$payarray 		=	array('Type'=>'received','PaymentTypeID'=>1,'PaymentDate'=>$PaymentDate,'ReferenceNo'=>$ReferenceNo,'OrderFormID'=>$OrderFormID,'Amount'=>$Amount,'CustomerID'=>$CustomerID,'PaymentAccountID'=>$PaymentAccountID);
 			$this->db->insert('payment',$payarray);
 		}
 

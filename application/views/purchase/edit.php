@@ -325,7 +325,7 @@
 				                <div class="input-group-btn">
 				                  <button type="button" class="btn btn-primary">Discount</button>
 				                </div>
-				                <input type="text" class="form-control" id="Discount" name="primary" onkeyup="GrandTotal();" style="font-size:13px; font-weight: bold;;text-align:right;" value="<?php echo isset($Discount)?number_format($Discount,2, '.', ''):''; ?>">
+				                <input type="text" class="form-control" id="Discount" name="Discount" onkeyup="GrandTotal();" style="font-size:13px; font-weight: bold;;text-align:right;" value="<?php echo isset($Discount)?number_format($Discount,2, '.', ''):''; ?>">
 				              </div>
 				          </div>
 

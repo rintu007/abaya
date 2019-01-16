@@ -326,7 +326,10 @@
 		function delete($PurchaseID)
 		{
 			$this->db->where('PurchaseID',$PurchaseID);
-			$this->db->delete('purchase_item');
+			$this->db->delete('payment');
+
+            $this->db->where('PurchaseID',$PurchaseID);
+            $this->db->delete('purchase_item');
 
 			$this->db->where('PurchaseID',$PurchaseID);
 			$this->db->delete('purchase');
@@ -416,8 +419,9 @@
 
         function view_payments($PurchaseID)
         {
-            $this->db->select('PaymentDate,Amount,PaymentID,OrderFormID');
-            $this->db->from('payment');
+            $this->db->select('P.PaymentDate,P.Amount,P.PaymentID,P.PurchaseID,A.PaymentAccountName');
+            $this->db->from('payment P');
+            $this->db->join('payment_account A','A.PaymentAccountID = P.PaymentAccountID','left');
             $this->db->where('PurchaseID',$PurchaseID);
             $this->db->where('PaymentTypeID','3');
             $query =	$this->db->get();
@@ -431,9 +435,9 @@
             return($result);
         }
 
-        function insert_payment($PurchaseID,$PaymentDate,$Amount,$ReferenceNo,$SupplierID)
+        function insert_payment($PurchaseID,$PaymentDate,$Amount,$ReferenceNo,$SupplierID,$PaymentAccountID)
         {
-            $payarray 		=	array('Type'=>'given','PaymentTypeID'=>3,'PaymentDate'=>$PaymentDate,'ReferenceNo'=>$ReferenceNo,'PurchaseID'=>$PurchaseID,'Amount'=>$Amount,'SupplierID'=>$SupplierID);
+            $payarray 		=	array('Type'=>'given','PaymentTypeID'=>3,'PaymentDate'=>$PaymentDate,'ReferenceNo'=>$ReferenceNo,'PurchaseID'=>$PurchaseID,'Amount'=>$Amount,'SupplierID'=>$SupplierID,'PaymentAccountID'=>$PaymentAccountID);
             $this->db->insert('payment',$payarray);
         }
 
