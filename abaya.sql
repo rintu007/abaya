@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 16, 2019 at 11:21 AM
+-- Generation Time: Jan 17, 2019 at 10:42 AM
 -- Server version: 10.1.25-MariaDB
 -- PHP Version: 5.6.31
 
@@ -62,7 +62,6 @@ CREATE TABLE `customer` (
 --
 
 INSERT INTO `customer` (`CustomerID`, `CustomerName`, `CustomerEmail`, `CustomerPhone`, `CustomerAddress`, `TRN`, `ImageID`, `CustomerActive`) VALUES
-(1, 'Test Customer', '', '', '', '', 0, '1'),
 (2, 'Suhail', '', '0527947235', '', '', 0, '1'),
 (3, 'Santhosh', '', '', '', '', 0, '1');
 
@@ -214,16 +213,6 @@ CREATE TABLE `order_assign` (
   `Status` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `order_assign`
---
-
-INSERT INTO `order_assign` (`OrderAssignID`, `OrderAssignDate`, `ReadyDate`, `DeliveredDate`, `OrderItemID`, `StaffID`, `Status`) VALUES
-(1, '2019-01-03', '2019-01-03', '2019-01-03', 3, 1, 'delivered'),
-(2, '2019-01-03', '2019-01-03', '2019-01-03', 2, 1, 'delivered'),
-(3, '2019-01-03', '2019-01-03', '2019-01-03', 6, 1, 'delivered'),
-(4, '2019-01-03', '2019-01-03', '0000-00-00', 7, 1, 'ready');
-
 -- --------------------------------------------------------
 
 --
@@ -248,17 +237,6 @@ CREATE TABLE `order_form` (
   `Status` varchar(25) NOT NULL DEFAULT 'new',
   `OrderFormActive` enum('0','1') NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `order_form`
---
-
-INSERT INTO `order_form` (`OrderFormID`, `ReferenceNo`, `CustomerID`, `OrderDate`, `DeliveryDate`, `Type`, `Discount`, `TotalTax`, `TotalWD`, `TotalAmount`, `ItemNo`, `ItemCount`, `CompleteDate`, `Sale`, `Status`, `OrderFormActive`) VALUES
-(1, '1500', 1, '2018-04-25', '2018-04-30', 'Normal', 0, 17.5, 367.5, 367.5, 1, 1, NULL, '0', 'new', '1'),
-(2, '123', 1, '2019-01-03', NULL, 'Urgent', 8.75, 133.75, 2808.75, 2800, 2, 2, '2019-01-15', '1', 'Complete', '1'),
-(3, '578', 2, '2019-01-03', NULL, 'Normal', 0, 46.66, 980, 980, 3, 3, NULL, '0', 'Partial Complete', '1'),
-(4, '512', 2, '2019-01-03', NULL, 'Normal', 0, 4.76, 100, 100, 1, 1, '2019-01-15', '1', 'Complete', '1'),
-(5, '512', 2, '2019-01-14', NULL, 'Normal', 0, 16.67, 350, 350, 1, 1, NULL, '0', 'new', '1');
 
 -- --------------------------------------------------------
 
@@ -303,20 +281,6 @@ CREATE TABLE `order_item` (
   `Status` varchar(25) NOT NULL DEFAULT 'new'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `order_item`
---
-
-INSERT INTO `order_item` (`OrderItemID`, `OrderFormID`, `OrderNo`, `BookNo`, `ItemSl`, `ItemName`, `ServiceID`, `DesignID`, `WFQuantity`, `ImageID`, `TaxRate`, `TaxMethod`, `Rate`, `Quantity`, `TaxValue`, `Amount`, `LEN`, `CHE`, `WE`, `HIP`, `SLEE`, `RIGA`, `FAR`, `BOX`, `NOR`, `BOT`, `NECK`, `AssignDate`, `ReadyDate`, `DeliveredDate`, `SaleDate`, `Ready`, `Sale`, `Status`) VALUES
-(1, 1, '1500', '30', 1, 'Test Customer', 1, 5, 2, 17, 5, 'exclusive', 350, 1, 17.5, 367.5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', 'new'),
-(2, 2, '123', '3', 1, 'Test Customer', 1, 7, 2, 19, 5, 'exclusive', 250, 5, 62.5, 1312.5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-01-03', '2019-01-03', '2019-01-03', '2019-01-15', '1', '1', 'delivered'),
-(3, 2, '124', '3', 2, 'Item No 2', 1, 1, 1, 14, 5, 'exclusive', 475, 3, 71.25, 1496.25, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-01-03', '2019-01-03', '2019-01-03', '2019-01-15', '1', '1', 'delivered'),
-(4, 3, '578', '12', 1, 'Suhail', 1, 7, 1, 19, 5, 'exclusive', 238.1, 1, 11.9, 250, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', 'new'),
-(5, 3, '579', '12', 2, 'Item No 2', 1, 4, 1, 16, 5, 'exclusive', 219.05, 1, 10.95, 230, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', 'new'),
-(6, 3, '580', '12', 3, 'Item No 3', 1, 1, 1, 14, 5, 'exclusive', 476.19, 1, 23.81, 500, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-01-03', '2019-01-03', '2019-01-03', '2019-01-15', '1', '1', 'delivered'),
-(7, 4, '512', '11', 1, 'Suhail', 3, 0, 0, 0, 5, 'inclusive', 100, 1, 4.76, 100, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2019-01-03', '2019-01-03', NULL, '2019-01-15', '1', '1', 'ready'),
-(8, 5, '512', '11', 1, 'Suhail', 1, 5, 2, 17, 5, 'exclusive', 333.33, 1, 16.67, 350, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '0', '0', 'new');
-
 -- --------------------------------------------------------
 
 --
@@ -338,26 +302,10 @@ CREATE TABLE `payment` (
   `StaffID` int(11) NOT NULL,
   `SalaryID` int(11) NOT NULL,
   `ExpenseID` int(11) NOT NULL,
+  `EquityID` int(11) NOT NULL,
+  `TransferID` int(11) NOT NULL,
   `Amount` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `payment`
---
-
-INSERT INTO `payment` (`PaymentID`, `Type`, `PaymentTypeID`, `PaymentAccountID`, `PaymentDate`, `ReferenceNo`, `SaleID`, `PurchaseID`, `OrderFormID`, `CustomerID`, `SupplierID`, `StaffID`, `SalaryID`, `ExpenseID`, `Amount`) VALUES
-(1, 'received', 2, 1, '2018-04-25', '001', 8, 0, 1, 1, 0, 0, 0, 0, 100),
-(2, 'received', 2, 1, '2019-01-03', '001', 8, 0, 2, 1, 0, 0, 0, 0, 800),
-(4, 'received', 2, 1, '2019-01-03', '003', 9, 0, 4, 2, 0, 0, 0, 0, 50),
-(5, 'received', 2, 1, '2019-01-13', '0058', 10, 0, 0, 2, 0, 0, 0, 0, 10),
-(7, 'received', 1, 1, '2019-01-14', '512', 0, 0, 5, 2, 0, 0, 0, 0, 150),
-(26, 'received', 2, 1, '2019-01-15', '001', 8, 0, 0, 1, 0, 0, 0, 0, 900),
-(38, 'received', 2, 2, '2019-01-16', '0058', 10, 0, 0, 2, 0, 0, 0, 0, 10),
-(39, 'received', 2, 2, '2019-01-16', '0058', 10, 0, 0, 2, 0, 0, 0, 0, 25),
-(40, 'received', 1, 2, '2019-01-16', '512', 0, 0, 5, 2, 0, 0, 0, 0, 100),
-(42, 'received', 1, 2, '2019-01-16', '578', 0, 0, 3, 2, 0, 0, 0, 0, 100),
-(44, 'given', 3, 1, '2019-01-16', '987555', 0, 4, 0, 0, 1, 0, 0, 0, 1500),
-(49, 'given', 4, 1, '2019-01-16', '0058', 0, 0, 0, 0, 0, 1, 2, 0, 250);
 
 -- --------------------------------------------------------
 
@@ -400,7 +348,9 @@ INSERT INTO `payment_type` (`PaymentTypeID`, `PaymentTypeName`) VALUES
 (4, 'Salary Expense'),
 (5, 'Other Expense'),
 (6, 'Equity Capital'),
-(7, 'Equity Withdraw');
+(7, 'Equity Withdraw'),
+(8, 'Transfer Sent'),
+(9, 'Transfer Received');
 
 -- --------------------------------------------------------
 
@@ -497,13 +447,6 @@ CREATE TABLE `purchase` (
   `TotalAmount` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `purchase`
---
-
-INSERT INTO `purchase` (`PurchaseID`, `ItemNo`, `SupplierID`, `WarehouseID`, `ReferenceNo`, `PurchaseDate`, `Discount`, `Amount`, `TaxRate`, `TaxAmount`, `TotalAmount`) VALUES
-(4, 3, 1, 2, '987555', '2019-01-16', 7.5, 2150, 5, 107.5, 2250);
-
 -- --------------------------------------------------------
 
 --
@@ -523,14 +466,6 @@ CREATE TABLE `purchase_item` (
   `MUStat` varchar(10) NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `purchase_item`
---
-
-INSERT INTO `purchase_item` (`PurchaseItemID`, `ItemSl`, `PurchaseID`, `ProductID`, `ProductBatchID`, `ProductMUID`, `ProductCost`, `Quantity`, `Price`, `MUStat`) VALUES
-(17, 2, 4, 10, 0, 0, 180, 5, 900, 'no'),
-(18, 3, 4, 7, 0, 0, 250, 5, 1250, 'no');
-
 -- --------------------------------------------------------
 
 --
@@ -545,13 +480,6 @@ CREATE TABLE `salary` (
   `Amount` float NOT NULL,
   `Description` varchar(500) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `salary`
---
-
-INSERT INTO `salary` (`SalaryID`, `SalaryDate`, `ReferenceNo`, `StaffID`, `Amount`, `Description`) VALUES
-(2, '2019-01-16', '0058', 1, 250, 'testing');
 
 -- --------------------------------------------------------
 
@@ -571,15 +499,6 @@ CREATE TABLE `sale` (
   `ItemNo` int(11) NOT NULL,
   `Status` varchar(20) NOT NULL DEFAULT 'new'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `sale`
---
-
-INSERT INTO `sale` (`SaleID`, `ReferenceNo`, `CustomerID`, `SaleDate`, `Total`, `TaxAmount`, `Discount`, `TotalAmount`, `ItemNo`, `Status`) VALUES
-(8, '001', 1, '2019-01-15', 2675, 133.75, 8.75, 2800, 3, 'new'),
-(9, '003', 2, '2019-01-15', 476.19, 23.81, 0, 500, 3, 'new'),
-(10, '0058', 2, '2019-01-15', 95.24, 4.76, 0, 100, 2, 'new');
 
 -- --------------------------------------------------------
 
@@ -605,16 +524,6 @@ CREATE TABLE `sale_item` (
   `ProductMUID` int(11) NOT NULL,
   `ProductBatchID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `sale_item`
---
-
-INSERT INTO `sale_item` (`SaleItemID`, `SaleID`, `ItemType`, `ProductID`, `OrderItemID`, `CheckOrderItem`, `ItemSl`, `TaxRate`, `TaxMethod`, `Rate`, `Quantity`, `TaxValue`, `Amount`, `MUStat`, `ProductMUID`, `ProductBatchID`) VALUES
-(33, 8, 'order', 0, 2, 2, 2, 5, 'exclusive', 250, 5, 62.5, 1312.5, 'no', 0, 0),
-(34, 8, 'order', 0, 3, 3, 3, 5, 'exclusive', 475, 3, 71.25, 1496.25, 'no', 0, 0),
-(35, 9, 'order', 0, 6, 0, 2, 5, 'exclusive', 476.19, 1, 23.81, 500, 'no', 0, 0),
-(37, 10, 'order', 0, 7, 0, 2, 5, 'inclusive', 100, 1, 4.76, 100, 'no', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -687,11 +596,13 @@ CREATE TABLE `stock` (
 --
 
 INSERT INTO `stock` (`StockID`, `ProductID`, `ProductBatchID`, `Quantity`) VALUES
-(1, 10, 0, 5),
+(1, 10, 0, 6),
 (2, 8, 0, 0),
-(3, 12, 0, 0),
+(3, 12, 0, 1),
 (4, 9, 0, 0),
-(5, 7, 0, 5);
+(5, 7, 0, 20),
+(6, 11, 0, -9),
+(7, 13, 0, -5);
 
 -- --------------------------------------------------------
 
@@ -736,6 +647,20 @@ CREATE TABLE `tax` (
 INSERT INTO `tax` (`TaxID`, `TaxName`, `TaxRate`) VALUES
 (7, 'Vat 5%', 5),
 (9, 'No Vat', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `transfer`
+--
+
+CREATE TABLE `transfer` (
+  `TransferID` int(11) NOT NULL,
+  `Date` date NOT NULL,
+  `FromAc` int(11) NOT NULL,
+  `ToAc` int(11) NOT NULL,
+  `Amount` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -987,6 +912,12 @@ ALTER TABLE `tax`
   ADD PRIMARY KEY (`TaxID`);
 
 --
+-- Indexes for table `transfer`
+--
+ALTER TABLE `transfer`
+  ADD PRIMARY KEY (`TransferID`);
+
+--
 -- Indexes for table `units`
 --
 ALTER TABLE `units`
@@ -1038,7 +969,7 @@ ALTER TABLE `equity`
 -- AUTO_INCREMENT for table `expense`
 --
 ALTER TABLE `expense`
-  MODIFY `ExpenseID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ExpenseID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `expense_category`
 --
@@ -1063,27 +994,27 @@ ALTER TABLE `order_assign`
 -- AUTO_INCREMENT for table `order_form`
 --
 ALTER TABLE `order_form`
-  MODIFY `OrderFormID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `OrderFormID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `order_item`
 --
 ALTER TABLE `order_item`
-  MODIFY `OrderItemID` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `OrderItemID` int(20) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `PaymentID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `PaymentID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `payment_account`
 --
 ALTER TABLE `payment_account`
-  MODIFY `PaymentAccountID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PaymentAccountID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `payment_type`
 --
 ALTER TABLE `payment_type`
-  MODIFY `PaymentTypeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `PaymentTypeID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `product`
 --
@@ -1103,27 +1034,27 @@ ALTER TABLE `product_mu`
 -- AUTO_INCREMENT for table `purchase`
 --
 ALTER TABLE `purchase`
-  MODIFY `PurchaseID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `PurchaseID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `purchase_item`
 --
 ALTER TABLE `purchase_item`
-  MODIFY `PurchaseItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `PurchaseItemID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `salary`
 --
 ALTER TABLE `salary`
-  MODIFY `SalaryID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `SalaryID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `sale`
 --
 ALTER TABLE `sale`
-  MODIFY `SaleID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `SaleID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `sale_item`
 --
 ALTER TABLE `sale_item`
-  MODIFY `SaleItemID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
+  MODIFY `SaleItemID` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `service`
 --
@@ -1138,7 +1069,7 @@ ALTER TABLE `staff`
 -- AUTO_INCREMENT for table `stock`
 --
 ALTER TABLE `stock`
-  MODIFY `StockID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `StockID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `supplier`
 --
@@ -1149,6 +1080,11 @@ ALTER TABLE `supplier`
 --
 ALTER TABLE `tax`
   MODIFY `TaxID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT for table `transfer`
+--
+ALTER TABLE `transfer`
+  MODIFY `TransferID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `units`
 --

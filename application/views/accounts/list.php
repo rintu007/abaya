@@ -12,17 +12,11 @@
 	<link rel="shortcut icon" href="<?php echo base_url(); ?>dist/img/logo.png">
 	<link rel="icon" href="<?php echo base_url(); ?>dist/img/logo.png" type="image/x-icon">
 
-    <!-- Data table CSS -->
-    <link href="<?php echo base_url();?>vendors/bower_components/datatables/media/css/jquery.dataTables.min.css" rel="stylesheet" type="text/css"/>
-    <link href="<?php echo base_url();?>vendors/bower_components/datatables.net-responsive/css/responsive.dataTables.min.css" rel="stylesheet" type="text/css"/>
-
 	<!-- Custom CSS -->
 	<link href="<?php echo base_url();?>dist/css/style.css" rel="stylesheet" type="text/css">
 
 	<!--alerts CSS -->
 	<link href="<?php echo base_url();?>vendors/bower_components/sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css">
-
-
 	
 </head>
 
@@ -57,15 +51,13 @@
 				<!-- Title -->
 				<div class="row heading-bg">
 					<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-
-							<div class="pull-left"><i class="fa  fa-th mr-5"></i><span class="right-nav-text">Equity <?php echo $Type; ?></span></div>
-
+					  <h5 class="txt-dark">Manufactures</h5>
 					</div>
 					<!-- Breadcrumb -->
 					<div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
 					  <ol class="breadcrumb">
 						<li><a href="<?php echo base_url(); ?>">Dashboard</a></li>
-						<li class="active"><span>Equity <?php echo $Type; ?></span></li>
+						<li class="active"><span>Accounts</span></li>
 					  </ol>
 					</div>
 					<!-- /Breadcrumb -->
@@ -78,10 +70,10 @@
 						<div class="panel panel-default card-view">
 							<div class="panel-heading">
 								<div class="pull-left">
-									<h6 class="panel-title txt-dark">List Equity <?php echo $Type; ?></h6>
+									<h6 class="panel-title txt-dark">List Accounts</h6>
 								</div>
 								<div class="pull-right">			
-									<a href="<?php echo base_url().'equity/'; echo ($Type == 'capital')?'add_capital':'add_withdraw'; ?>"><div class="pull-left"><i class="fa fa-plus-square mr-5"></i><span class="right-nav-text">New</span></div></a>
+									<!--<a href="<?php /*echo base_url().'accounts/add'; */?>"><div class="pull-left"><i class="fa fa-plus-square mr-5"></i><span class="right-nav-text">New</span></div></a>-->
 								</div>
 								<div class="clearfix"></div>
 							</div>
@@ -93,9 +85,9 @@
 											<table class="table mb-0" id="TableData">
 												<thead>
 												  <tr>
-													<th>Date</th>
-                                                      <th>Account</th>
-                                                      <th>Amount</th>
+													<th>#</th>
+                                                      <th>Name</th>
+                                                      <th>Balance</th>
 
 													<th class="text-nowrap">Action</th>
 												  </tr>
@@ -105,21 +97,19 @@
 						foreach($items as $item)
 						{
 							$count++;
+                            $Received = $this->m_accounts->view_balance($item['PaymentAccountID'],'received');
+                            $Given = $this->m_accounts->view_balance($item['PaymentAccountID'],'given');
+                            $Balance = number_format($Received-$Given,2);
 ?>
-												  <tr id="<?php echo $item['EquityID'];?>">
-													<td><?php echo date('d-m-Y',strtotime($item['Date'])); ?></td>
-
-
-                                                      <td><?php echo$item['PaymentAccountName']; ?></td>
-                                                      <td><?php echo number_format($item['Amount'],2); ?></td>
-
-
+												  <tr id="<?php echo $item['PaymentAccountID'];?>">
+													<td><?php echo $count; ?></td>
+                                                      <td><?php echo $item['PaymentAccountName']; ?></td>
+                                                      <td><?php echo $Balance; ?></td>
 													<td class="text-nowrap">
 
-														<a href="<?php echo base_url().'equity/edit/'.$item['EquityID']; ?>" class="mr-25" data-toggle="tooltip" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i>
-														</a> 
+														<a href="<?php echo base_url().'accounts/edit/'.$item['PaymentAccountID']; ?>" class="mr-25" data-toggle="tooltip" data-original-title="Edit"> <i class="fa fa-pencil text-inverse m-r-10"></i> </a>
 
-														<a href="#" onclick="DeleteItem(<?php echo $item['EquityID']; ?>);" data-toggle="tooltip" data-original-title="Close"> <i class="fa fa-close text-danger"></i> </a> </td>
+														<?php /* <a href="#" onclick="DeleteItem(<?php echo $item['PaymentAccountID']; ?>);" data-toggle="tooltip" data-original-title="Close"> <i class="fa fa-close text-danger"></i> </a> </td> */ ?>
 												  </tr>
 <?php 					}
 						if($count == 0)
@@ -137,10 +127,6 @@
 						</div>
 					</div>
 					<!-- /Basic Table -->
-
-					
-
-
 				</div>	
 				
 				
@@ -158,47 +144,33 @@
     <!-- /#wrapper -->
 	
 	<!-- JavaScript -->
-
+	
 
 
     <!-- Bootstrap Core JavaScript -->
     <script src="<?php echo base_url();?>vendors/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
+	
 	<!-- Piety JavaScript -->
 	<script src="<?php echo base_url();?>vendors/bower_components/peity/jquery.peity.min.js"></script>
 	<script src="<?php echo base_url();?>dist/js/peity-data.js"></script>
-
+	
 	<!-- Slimscroll JavaScript -->
 	<script src="<?php echo base_url();?>dist/js/jquery.slimscroll.js"></script>
-
+	
 	<!-- Owl JavaScript -->
 	<script src="<?php echo base_url();?>vendors/bower_components/owl.carousel/dist/owl.carousel.min.js"></script>
-
+	
 	<!-- Switchery JavaScript -->
 	<script src="<?php echo base_url();?>vendors/bower_components/switchery/dist/switchery.min.js"></script>
-
+	
 	<!-- Fancy Dropdown JS -->
 
 
 	<!-- Sweet-Alert  -->
 	<script src="<?php echo base_url();?>vendors/bower_components/sweetalert/dist/sweetalert.min.js"></script>
 
-    <!-- Data table JavaScript -->
-    <script src="<?php echo base_url();?>vendors/bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="<?php echo base_url();?>vendors/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="<?php echo base_url();?>vendors/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
-
-
 
 	<script type="text/javascript">
-
-        "use strict";
-        $(document).ready(function() {
-            $('#TableData').DataTable( {
-                responsive: true,
-                "aaSorting": []
-            } );
-        } );
 			
 		function DeleteItem(id)
 		{
@@ -216,7 +188,7 @@
 		        }, function(isConfirm){   
 		            if (isConfirm) {
 		            	$.ajax({
-					      url: '<?php echo base_url()."equity/delete";?>',
+					      url: '<?php echo base_url()."accounts/delete";?>',
 					      type: 'post',
 					      data: { id: id},
 					      success: function(data) {

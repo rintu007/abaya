@@ -14,19 +14,13 @@
 		
 		<!-- Jasny-bootstrap CSS -->
 		<link href="<?php echo base_url();?>vendors/bower_components/jasny-bootstrap/dist/css/jasny-bootstrap.min.css" rel="stylesheet" type="text/css"/>
-
-		<!-- Bootstrap Dropify CSS -->
-		<link href="<?php echo base_url();?>vendors/bower_components/dropify/dist/css/dropify.min.css" rel="stylesheet" type="text/css"/>
-
-		<!-- switchery CSS -->
-		<link href="<?php echo base_url();?>vendors/bower_components/switchery/dist/switchery.min.css" rel="stylesheet" type="text/css"/>
 		
 		<!-- Custom CSS -->
 		<link href="<?php echo base_url();?>dist/css/style.css" rel="stylesheet" type="text/css">
 
-		<!--alerts CSS -->
-	<link href="<?php echo base_url();?>vendors/bower_components/sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css">
 
+        <!--alerts CSS -->
+        <link href="<?php echo base_url();?>vendors/bower_components/sweetalert/dist/sweetalert.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
 		<!--Preloader-->
@@ -57,7 +51,7 @@
 					<!-- Title -->
 					<div class="row heading-bg">
 						<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-						  <h5 class="txt-dark"><?php echo ucfirst($mode); ?> Expense</h5>
+						  <h5 class="txt-dark"><?php echo ucfirst($mode); ?> tranfer</h5>
 						</div>
 						<!-- Breadcrumb -->
 						<div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
@@ -65,7 +59,7 @@
 		
 
 							<li><a href="<?php echo base_url(); ?>">Dashboard</a></li>
-							<li><a href="<?php echo base_url().'expense'; ?>"><span>Expense</span></a></li>
+							<li><a href="<?php echo base_url().'accounts/tranfer_list/'; ?>"><span>Tranfer</span></a></li>
 						<li class="active"><span><?php echo ucfirst($mode); ?></span></li>
 						  </ol>
 						</div>
@@ -81,49 +75,27 @@
 								<div class="panel-wrapper collapse in">
 									<div class="panel-body">
 										<div class="form-wrap">
-											<form name="form one" method="post" action="<?php echo base_url().'expense/'.$mode;?>" >
+											<form name="form one" method="post" action="<?php echo base_url().'accounts/'.$mode;?>" id="PurchaseForm">
 
 													<div class="row">
 														<div class="col-sm-6">
 
                                                             <div class="form-group">
                                                                 <label class="control-label mb-10 text-left">Date</label>
-                                                                <input type="date" name="ExpenseDate" id="ExpenseDate" required="required"  class="form-control"
-                                                                       value="<?php echo isset($ExpenseDate)?$ExpenseDate:date('Y-m-d'); ?>" >
-                                                            </div>
-
-                                                            <div class="form-group">
-                                                                <label class="control-label mb-10 text-left">Reference Number</label>
-                                                                <input type="text" name="ReferenceNo" id="ReferenceNo"  placeholder="Enter Reference number" class="form-control"
-                                                                       value="<?php echo isset($ReferenceNo)?$ReferenceNo:''; ?>" >
-                                                            </div>
-
-                                                            <div class="form-group">
-                                                                <label class="control-label mb-10">Type</label>
-                                                                <select class="form-control" name="ExpenseCategoryID" id="ExpenseCategoryID" required="required" >
-                                                                    <option value="">Chose Type</option>
-
-                                                                    <?php
-                                                                    foreach($Cats as $Sf)
-                                                                    {
-                                                                        ?>
-                                                                        <option value="<?php echo $Sf['ExpenseCategoryID']; ?>" <?php echo (isset($ExpenseCategoryID) && $ExpenseCategoryID == $Sf['ExpenseCategoryID'])?'selected':''; ?> ><?php echo $Sf['ExpenseCategoryName']; ?></option>
-                                                                        <?php
-                                                                    }
-                                                                    ?>
-                                                                </select>
+                                                                <input type="date" name="Date" id="Date" required="required"  class="form-control"
+                                                                       value="<?php echo isset($Date)?$Date:date('Y-m-d'); ?>" >
                                                             </div>
 
 
                                                             <div class="form-group">
-                                                                <label class="control-label mb-10 text-left">Pay from</label>
-                                                                <select class="form-control" name="PaymentAccountID" id="PaymentAccountID" required="required">
+                                                                <label class="control-label mb-10 text-left">From Acccount</label>
+                                                                <select class="form-control" name="FromAc" id="FromAc" required="required">
 
                                                                     <?php
                                                                     foreach($Accounts as $Ac)
                                                                     {
                                                                         ?>
-                                                                        <option value="<?php echo $Ac['PaymentAccountID']; ?>" <?php echo (isset($PaymentAccountID) && $PaymentAccountID == $Ac['PaymentAccountID'])?'selected':''; ?> ><?php echo $Ac['PaymentAccountName']; ?></option>
+                                                                        <option value="<?php echo $Ac['PaymentAccountID']; ?>" <?php echo (isset($FromAc) && $FromAc == $Ac['PaymentAccountID'])?'selected':''; ?> ><?php echo $Ac['PaymentAccountName']; ?></option>
 
                                                                         <?php
                                                                     }
@@ -131,49 +103,50 @@
                                                                 </select>
                                                             </div>
 
-
-															<div class="form-group">
-																<label class="control-label mb-10 text-left">Amount</label>
-																<input type="text" name="Amount" id="Amount"  placeholder="Enter  Amount" class="form-control"
-																value="<?php echo isset($Amount)?$Amount:''; ?>" >
-															</div>
-
-
                                                             <div class="form-group">
-                                                                <label class="control-label mb-10 text-left">Details</label>
-                                                                <textarea name="Description" id="Description"  placeholder="Enter description" class="form-control"><?php echo isset($Description)?$Description:''; ?></textarea>
+                                                                <label class="control-label mb-10 text-left">To Acccount</label>
+                                                                <select class="form-control" name="ToAc" id="ToAc" required="required">
+
+                                                                    <?php
+                                                                    foreach($Accounts as $Ac)
+                                                                    {
+                                                                        ?>
+                                                                        <option value="<?php echo $Ac['PaymentAccountID']; ?>" <?php echo (isset($ToAc) && $ToAc == $Ac['PaymentAccountID'])?'selected':''; ?> ><?php echo $Ac['PaymentAccountName']; ?></option>
+
+                                                                        <?php
+                                                                    }
+                                                                    ?>
+                                                                </select>
                                                             </div>
 
-
-                                                                <div class="col-sm-2 col-xs-6 mt-15">
-                                                                    <input type="hidden" name="ExpenseID" id="ExpenseID" value="<?php echo isset($ExpenseID)?$ExpenseID:''; ?>">
-
-                                                                    <button class="btn btn-primary  btn-rounded btn-block btn-anim"><i class="fa fa-check-square"></i><span class="btn-text"><?php echo ucfirst($mode); ?> </span></button>
-                                                                </div>
-
-
-
-                                                                <div class="col-sm-2 col-xs-6 mt-15">
-                                                                    <a class="btn btn-danger  btn-rounded btn-block btn-anim" href="<?php echo base_url().'salary'; ?>"><i class="fa fa-minus-circle"></i><span class="btn-text">Cancel</span></a>
-                                                                </div>
-
-
-
-
-                                                        </div>
-
-
-
-
+                                                            <div class="form-group">
+                                                                <label class="control-label mb-10 text-left">Amount</label>
+                                                                <input type="text" name="Amount" id="Amount"  placeholder="Enter  Amount" class="form-control"
+                                                                       value="<?php echo isset($Amount)?$Amount:''; ?>" >
+                                                            </div>
 
 															
 
 
 
+															<br>
+															<div class="col-sm-4 col-xs-12 mt-15">
+																<input type="hidden" name="TransferID" id="TransferID" value="<?php echo isset($TransferID)?$TransferID:''; ?>">
+                                                                <button class="btn btn-primary  btn-rounded btn-block btn-anim" type="button" onclick="SubmitForm();"><i class="fa fa-check-square"></i><span class="btn-text">Submit</span></button>
+															</div>
+
+
+
+															<div class="col-sm-4 col-xs-12 mt-15">
+																<a class="btn btn-danger  btn-rounded btn-block btn-anim" href="<?php echo base_url().'accounts'; ?>"><i class="fa fa-minus-circle"></i><span class="btn-text">Cancel</span></a>
+															</div>
+
+															
+
 														</div>
 
 
-
+													</div>
 												
 											</form>
 										</div>
@@ -181,10 +154,6 @@
 								</div>
 							</div>
 						</div>
-
-
-
-
 					</div>
 					<!-- /Row -->
 					
@@ -223,24 +192,24 @@
 		<!-- Switchery JavaScript -->
 		<script src="<?php echo base_url();?>vendors/bower_components/switchery/dist/switchery.min.js"></script>
 
-
-		<!-- Bootstrap Daterangepicker JavaScript -->
-		<script src="<?php echo base_url();?>vendors/bower_components/dropify/dist/js/dropify.min.js"></script>
-		
-
-		<!-- Form Flie Upload Data JavaScript -->
-		<script src="<?php echo base_url();?>dist/js/form-file-upload-data.js"></script>
-
-		<!-- Sweet-Alert  -->
-		<script src="<?php echo base_url();?>vendors/bower_components/sweetalert/dist/sweetalert.min.js"></script>
+        <!-- Sweet-Alert  -->
+        <script src="<?php echo base_url();?>vendors/bower_components/sweetalert/dist/sweetalert.min.js"></script>
 
 
+    <script type="text/javascript">
+        function SubmitForm()
+        {
+            if($('#FromAc').val() == $('#ToAc').val())
+            {
+                swal("Both accounts are same", "Please chose different accounts", "warning");
+            }
+            else
+            {
+                $("#PurchaseForm").submit();
+            }
 
-		<script type="text/javascript">
-			
-
-
-		</script>
+        }
+    </script>
 
 
 		

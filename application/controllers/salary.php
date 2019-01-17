@@ -54,6 +54,7 @@ class salary extends CI_Controller
 				$_SESSION['MsgCode']	   =   'error';
 	            $_SESSION['MsgTitle']      =   "Item not added ";
 	            $_SESSION['MsgContent']    =   "Please add item again ";
+
 	            $this->add();	
 			}
 		}
@@ -63,7 +64,8 @@ class salary extends CI_Controller
 			$data['Staff']		=	$this->m_salary->view_staff();
 			$data['title']		=	'Salary';
 			$data['mode']		=	'add';
-			//print_r($data['Staff']);exit;
+            $data['Accounts']	=	$this->m_salary->view_payment_accounts();
+            $data['PaymentAccountID']		=	1;
 			$this->load->view('salary/add',$data);
 		}
 		
@@ -72,7 +74,8 @@ class salary extends CI_Controller
 	{
 		$data				=	$this->m_salary->view_single($SalaryID);
         $data['Staff']		=	$this->m_salary->view_staff();
-		$data['title']	=	'Salary';
+        $data['Accounts']	=	$this->m_salary->view_payment_accounts();
+        $data['title']	=	'Salary';
 		$data['mode']	=	'update';
 		$this->load->view('salary/add',$data);
 

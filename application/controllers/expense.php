@@ -61,7 +61,8 @@ class expense extends CI_Controller
 			$data['Cats']		=	$this->m_expense->view_expense_category();
 			$data['title']		=	'Expense';
 			$data['mode']		=	'add';
-			//print_r($data['Staff']);exit;
+            $data['Accounts']	=	$this->m_expense->view_payment_accounts();
+            $data['PaymentAccountID']		=	1;
 			$this->load->view('expense/add',$data);
 		}
 		
@@ -72,6 +73,7 @@ class expense extends CI_Controller
         $data['Cats']		=	$this->m_expense->view_expense_category();
 		$data['title']	=	'Expense';
 		$data['mode']	=	'update';
+        $data['Accounts']	=	$this->m_expense->view_payment_accounts();
 		$this->load->view('expense/add',$data);
 
 	}

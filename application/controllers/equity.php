@@ -13,10 +13,9 @@ class equity extends CI_Controller
 		$this->load->model("m_login");
 		$this->load->model("m_equity");
 		$this->m_login->check_login();
-		$_SESSION['PageActive']		=	"expense";
-		$_SESSION['SubActive']		=	"list_expense";
+		$_SESSION['PageActive']		=	"equity";
+        $_SESSION['SubActive']		=	"capital";
 
-		
 	}
 	
 
@@ -25,7 +24,8 @@ class equity extends CI_Controller
 	{
 		$data['title']	=	'Capital Equity ';
 		$data['items']	=	$this->m_equity->view('capital');
-        $data['type']   =   'capital';
+        $data['Type']   =   'capital';
+        $_SESSION['SubActive']		=	"capital";
 		$this->load->view('equity/list',$data);
 	}
 
@@ -33,12 +33,14 @@ class equity extends CI_Controller
     {
         $data['title']	=	'Withdraws ';
         $data['items']	=	$this->m_equity->view('withdraw');
-        $data['type']   =   'withdraw';
+        $data['Type']   =   'withdraw';
+        $_SESSION['SubActive']		=	"withdraw";
         $this->load->view('equity/list',$data);
     }
 
 	public function add_capital()
 	{
+        $_SESSION['SubActive']		=	"capital";
 		if(isset($_POST['Amount']))
 		{
 
@@ -49,6 +51,7 @@ class equity extends CI_Controller
 				$_SESSION['MsgCode']	   =   'success';
                 $_SESSION['MsgTitle']      =   "Item Added ";
                 $_SESSION['MsgContent']    =   "New item added succesfully";
+
 
 	            redirect(base_url().'equity/capital');
 			}
@@ -65,8 +68,11 @@ class equity extends CI_Controller
 
 			$data['title']		=	'Equity Capital';
             $data['mode']		=	'add';
-            $data['type']		=	'capital';
-			//print_r($data['Staff']);exit;
+            $data['Type']		=	'capital';
+
+            $data['Accounts']	=	$this->m_equity->view_payment_accounts();
+            $data['PaymentAccountID']		=	1;
+
 			$this->load->view('equity/add',$data);
 		}
 
@@ -74,6 +80,7 @@ class equity extends CI_Controller
 
     public function add_withdraw()
     {
+        $_SESSION['SubActive']		=	"withdraw";
         if(isset($_POST['Amount']))
         {
 
@@ -84,6 +91,7 @@ class equity extends CI_Controller
                 $_SESSION['MsgCode']	   =   'success';
                 $_SESSION['MsgTitle']      =   "Item Added ";
                 $_SESSION['MsgContent']    =   "New item added succesfully";
+
 
                 redirect(base_url().'equity/withdraw');
             }
@@ -99,8 +107,11 @@ class equity extends CI_Controller
         {
             $data['title']		=	'Equity withdraw';
             $data['mode']		=	'add';
-            $data['type']		=	'withdraw';
-            //print_r($data['Staff']);exit;
+            $data['Type']		=	'withdraw';
+
+            $data['Accounts']	=	$this->m_equity->view_payment_accounts();
+            $data['PaymentAccountID']		=	1;
+
             $this->load->view('equity/add',$data);
         }
 
@@ -111,7 +122,8 @@ class equity extends CI_Controller
 		$data				=	$this->m_equity->view_single($EquityID);
 		$data['title']	=	'Equity';
 		$data['mode']	=	'update';
-		$this->load->view('expense/add',$data);
+        $data['Accounts']	=	$this->m_equity->view_payment_accounts();
+		$this->load->view('equity/add',$data);
 
 	}
 
@@ -125,8 +137,9 @@ class equity extends CI_Controller
             $_SESSION['MsgCode']	   =   'success';
             $_SESSION['MsgTitle']      =   "Item Updated ";
             $_SESSION['MsgContent']    =   "Item Update succesfully";
+            $_SESSION['SubActive']		=	$_POST['Type'];
 
-	        redirect(base_url().'equity/'.$_POST['type']);
+            redirect(base_url().'equity/'.$_POST['Type']);
 		}
 		else
 		{

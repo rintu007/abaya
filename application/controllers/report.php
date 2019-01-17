@@ -41,5 +41,25 @@ class report extends CI_Controller
 		$this->load->view('report/stock_detail',$data);
 	}
 
+	function trial_balance(){
+        $_SESSION['SubActive']		=	"trial_balance";
+
+        $data['CashBalance'] = $this->m_report->view_balance(1);
+        $data['BankBalance'] = $this->m_report->view_balance(2);
+        $data['PurchaseAmount'] = $this->m_report->payment_type_amount(3,'given');
+        $data['SalaryExpense'] = $this->m_report->payment_type_amount(4,'given');
+        $data['OtherExpense'] = $this->m_report->payment_type_amount(5,'given');
+        $data['EquityWithdraw'] = $this->m_report->payment_type_amount(7,'given');
+
+
+        $data['EquityCapital'] = $this->m_report->payment_type_amount(6,'received');
+        $data['SaleAmount'] = $this->m_report->payment_type_amount(2,'received');
+        $data['AdvanceAmount'] = $this->m_report->payment_type_amount(1,'received');
+
+        $data['title']	=	'Tiral balance';
+        $this->load->view('report/trial_balance',$data);
+    }
+
+
 
 }

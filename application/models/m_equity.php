@@ -14,17 +14,23 @@
 		public function add($data)
 		{
 			
-			$ExpenseDate	    =	date('Y-m-d',strtotime($data['ExpenseDate']));;
-			$ExpenseCategoryID	    =	$data['ExpenseCategoryID'];
-            $ReferenceNo	=	!empty($data['ReferenceNo'])?$data['ReferenceNo']:'';
-			$Amount	        =	!empty($data['Amount'])?$data['Amount']:0;
+			$Date	    =	date('Y-m-d',strtotime($data['Date']));;
+			$Type	    =	$data['Type'];
+            $PaymentAccountID	  =	$data['PaymentAccountID'];
+            $Amount	        =	!empty($data['Amount'])?$data['Amount']:0;
             $Description	=	!empty($data['Description'])?$data['Description']:'';
 
-            $array		=	array('ExpenseDate'=>$ExpenseDate,'ExpenseCategoryID'=>$ExpenseCategoryID,'ReferenceNo'=>$ReferenceNo,'Amount'=>$Amount,'Description'=>$Description);
-			$result 	=	$this->db->insert('expense',$array);
-            $ExpenseID 	=	$this->db->insert_id();
+            $array		=	array('Date'=>$Date,'Type'=>$Type,'Amount'=>$Amount,'Description'=>$Description);
+			$result 	=	$this->db->insert('equity',$array);
+            $EquityID 	=	$this->db->insert_id();
 
-            $payarray 		=	array('Type'=>'given','PaymentTypeID'=>5,'PaymentDate'=>$ExpenseDate,'ReferenceNo'=>$ReferenceNo,'ExpenseID'=>$ExpenseID,'Amount'=>$Amount);
+
+            if($Type == 'capital'){
+                $payarray 		=	array('Type'=>'received','PaymentTypeID'=>6,'PaymentDate'=>$Date,'ReferenceNo'=>'','EquityID'=>$EquityID,'Amount'=>$Amount,'PaymentAccountID'=>$PaymentAccountID);
+            }
+            else{
+                $payarray 		=	array('Type'=>'given','PaymentTypeID'=>7,'PaymentDate'=>$Date,'ReferenceNo'=>'','EquityID'=>$EquityID,'Amount'=>$Amount,'PaymentAccountID'=>$PaymentAccountID);
+            }
             $this->db->insert('payment',$payarray);
 
 			
@@ -33,67 +39,72 @@
 		//for update management details
 		public function update($data)
 		{
-            $ExpenseID		=	$data['ExpenseID'];
-            $ExpenseDate	    =	date('Y-m-d',strtotime($data['ExpenseDate']));;
-            $ExpenseCategoryID	    =	$data['ExpenseCategoryID'];
-            $ReferenceNo	=	!empty($data['ReferenceNo'])?$data['ReferenceNo']:'';
+            $EquityID		=	$data['EquityID'];
+            $Date	    =	date('Y-m-d',strtotime($data['Date']));;
+            $Type	    =	$data['Type'];
+            $PaymentAccountID	  =	$data['PaymentAccountID'];
             $Amount	        =	!empty($data['Amount'])?$data['Amount']:0;
             $Description	=	!empty($data['Description'])?$data['Description']:'';
 
-            $array		=	array('ExpenseDate'=>$ExpenseDate,'ExpenseCategoryID'=>$ExpenseCategoryID,'ReferenceNo'=>$ReferenceNo,'Amount'=>$Amount,'Description'=>$Description);
-            $this->db->where('ExpenseID',$ExpenseID);
-			$result		=	$this->db->update('expense',$array);
+            $array		=	array('Date'=>$Date,'Type'=>$Type,'Amount'=>$Amount,'Description'=>$Description);
+            $this->db->where('EquityID',$EquityID);
+			$result		=	$this->db->update('equity',$array);
 
-            $payarray 		=	array('Type'=>'given','PaymentTypeID'=>5,'PaymentDate'=>$ExpenseDate,'ReferenceNo'=>$ReferenceNo,'ExpenseID'=>$ExpenseID,'Amount'=>$Amount);
-            $this->db->where('ExpenseID',$ExpenseID);
+            if($Type == 'capital'){
+                $payarray 		=	array('Type'=>'received','PaymentTypeID'=>6,'PaymentDate'=>$Date,'ReferenceNo'=>'','EquityID'=>$EquityID,'Amount'=>$Amount,'PaymentAccountID'=>$PaymentAccountID);
+            }
+            else{
+                $payarray 		=	array('Type'=>'given','PaymentTypeID'=>7,'PaymentDate'=>$Date,'ReferenceNo'=>'','EquityID'=>$EquityID,'Amount'=>$Amount,'PaymentAccountID'=>$PaymentAccountID);
+            }
+            $this->db->where('EquityID',$EquityID);
             $this->db->update('payment',$payarray);
 
 			return($result);
 		}
 		
-		public function view()
+		public function view($type)
 		{
-            $this->db->select('S.ExpenseID,S.ExpenseCategoryID,S.ReferenceNo,S.ExpenseDate,S.Amount,A.ExpenseCategoryName');
-            $this->db->from('expense S');
-            $this->db->join('expense_category A','S.ExpenseCategoryID = A.ExpenseCategoryID','left');
-			$this->db->order_by('S.ExpenseID','DESC');
+            $this->db->select('S.EquityID,S.Type,,S.Date,S.Amount,A.PaymentAccountName');
+            $this->db->from('equity S');
+            $this->db->join('payment P','S.EquityID = P.EquityID','left');
+            $this->db->join('payment_account A','A.PaymentAccountID = P.PaymentAccountID','left');
+            $this->db->where('S.Type',$type);
+			$this->db->order_by('S.EquityID','DESC');
 			$query	=	$this->db->get();
 			$result	=	$query->result_array();
 			return($result);
 		}
-		public function delete($ExpenseID)
+		public function delete($EquityID)
 		{
-
-
-			$this->db->where('ExpenseID',$ExpenseID);
+			$this->db->where('EquityID',$EquityID);
 			$this->db->delete('payment');
 
-			$this->db->where('ExpenseID',$ExpenseID);
-			$this->db->delete('expense');
-
+			$this->db->where('EquityID',$EquityID);
+			$this->db->delete('equity');
 			return(1);			
 		}
 
 
-		public function view_single($ExpenseID)
+		public function view_single($EquityID)
 		{
-            $this->db->select('S.ExpenseID,S.ExpenseCategoryID,S.ReferenceNo,S.ExpenseDate,S.Amount,A.ExpenseCategoryName,S.Description');
-			$this->db->from('expense S');
-			$this->db->join('expense_category A','S.ExpenseCategoryID = A.ExpenseCategoryID','left');
-			$this->db->where('ExpenseID',$ExpenseID);
+            $this->db->select('S.EquityID,S.Type,S.Date,S.Amount,S.Description,P.PaymentAccountID');
+			$this->db->from('equity S');
+            $this->db->join('payment P','P.EquityID = S.EquityID','left');
+     			$this->db->where('S.EquityID',$EquityID);
 			$query	=	$this->db->get();
 			$result	=	$query->row_array();
 			return($result);
 		}
 
-		public function view_expense_category()
-		{
-			$this->db->select('ExpenseCategoryID,ExpenseCategoryName');
-			$this->db->from('expense_category');
-			$query 	=	$this->db->get();
-			$result =	$query->result_array();
-			return($result);
-		}
+        function view_payment_accounts()
+        {
+            $this->db->select('PaymentAccountID,PaymentAccountName');
+            $this->db->from('payment_account');
+            $query 	=	$this->db->get();
+            $result =	$query->result_array();
+            return($result);
+        }
+
 
 	}
 	

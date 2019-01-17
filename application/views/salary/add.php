@@ -114,6 +114,22 @@
                                                                 </select>
                                                             </div>
 
+                                                            <div class="form-group">
+                                                                <label class="control-label mb-10 text-left">Pay from</label>
+                                                                <select class="form-control" name="PaymentAccountID" id="PaymentAccountID" required="required">
+
+                                                                    <?php
+                                                                    foreach($Accounts as $Ac)
+                                                                    {
+                                                                        ?>
+                                                                        <option value="<?php echo $Ac['PaymentAccountID']; ?>" <?php echo (isset($PaymentAccountID) && $PaymentAccountID == $Ac['PaymentAccountID'])?'selected':''; ?> ><?php echo $Ac['PaymentAccountName']; ?></option>
+
+                                                                        <?php
+                                                                    }
+                                                                    ?>
+                                                                </select>
+                                                            </div>
+
 
 															<div class="form-group">
 																<label class="control-label mb-10 text-left">Amount</label>

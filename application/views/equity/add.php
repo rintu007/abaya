@@ -57,7 +57,7 @@
 					<!-- Title -->
 					<div class="row heading-bg">
 						<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-						  <h5 class="txt-dark"><?php echo ucfirst($mode); ?> Expense</h5>
+						  <h5 class="txt-dark"><?php echo ucfirst($mode); ?> Equity <?php echo $Type; ?></h5>
 						</div>
 						<!-- Breadcrumb -->
 						<div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
@@ -65,8 +65,8 @@
 		
 
 							<li><a href="<?php echo base_url(); ?>">Dashboard</a></li>
-							<li><a href="<?php echo base_url().'expense'; ?>"><span>Expense</span></a></li>
-						<li class="active"><span><?php echo ucfirst($mode); ?></span></li>
+							<li><a href="<?php echo base_url().'equity/'.$Type; ?>"><span>Equity <?php echo $Type; ?></span></a></li>
+						    <li class="active"><span><?php echo ucfirst($mode); ?></span></li>
 						  </ol>
 						</div>
 						<!-- /Breadcrumb -->
@@ -81,39 +81,43 @@
 								<div class="panel-wrapper collapse in">
 									<div class="panel-body">
 										<div class="form-wrap">
-											<form name="form one" method="post" action="<?php echo base_url().'expense/'.$mode;?>" >
+                                            <?php if($mode == 'add'){
+                                                $url = base_url().'equity/';
+                                                $url =  ($Type == 'capital')?$url.'add_capital':$url.'add_withdraw';
+                                            }
+                                            else{
+                                                $url = base_url().'equity/update';;
+                                            }
+                                            ?>
+											<form name="form one" method="post" action="<?php echo $url;?>" >
 
 													<div class="row">
 														<div class="col-sm-6">
 
                                                             <div class="form-group">
                                                                 <label class="control-label mb-10 text-left">Date</label>
-                                                                <input type="date" name="ExpenseDate" id="ExpenseDate" required="required"  class="form-control"
-                                                                       value="<?php echo isset($ExpenseDate)?$ExpenseDate:date('Y-m-d'); ?>" >
+                                                                <input type="date" name="Date" id="Date" required="required"  class="form-control"
+                                                                       value="<?php echo isset($Date)?$Date:date('Y-m-d'); ?>" >
                                                             </div>
 
-                                                            <div class="form-group">
-                                                                <label class="control-label mb-10 text-left">Reference Number</label>
-                                                                <input type="text" name="ReferenceNo" id="ReferenceNo"  placeholder="Enter Reference number" class="form-control"
-                                                                       value="<?php echo isset($ReferenceNo)?$ReferenceNo:''; ?>" >
-                                                            </div>
+
+
 
                                                             <div class="form-group">
-                                                                <label class="control-label mb-10">Type</label>
-                                                                <select class="form-control" name="ExpenseCategoryID" id="ExpenseCategoryID" required="required" >
-                                                                    <option value="">Chose Type</option>
+                                                                <label class="control-label mb-10 text-left">Pay <?php echo ($Type == 'capital')?'to':'from'; ?></label>
+                                                                <select class="form-control" name="PaymentAccountID" id="PaymentAccountID" required="required">
 
                                                                     <?php
-                                                                    foreach($Cats as $Sf)
+                                                                    foreach($Accounts as $Ac)
                                                                     {
                                                                         ?>
-                                                                        <option value="<?php echo $Sf['ExpenseCategoryID']; ?>" <?php echo (isset($ExpenseCategoryID) && $ExpenseCategoryID == $Sf['ExpenseCategoryID'])?'selected':''; ?> ><?php echo $Sf['ExpenseCategoryName']; ?></option>
+                                                                        <option value="<?php echo $Ac['PaymentAccountID']; ?>" <?php echo (isset($PaymentAccountID) && $PaymentAccountID == $Ac['PaymentAccountID'])?'selected':''; ?> ><?php echo $Ac['PaymentAccountName']; ?></option>
+
                                                                         <?php
                                                                     }
                                                                     ?>
                                                                 </select>
                                                             </div>
-
 
 															<div class="form-group">
 																<label class="control-label mb-10 text-left">Amount</label>
@@ -129,7 +133,8 @@
 
 
                                                                 <div class="col-sm-2 col-xs-6 mt-15">
-                                                                    <input type="hidden" name="ExpenseID" id="ExpenseID" value="<?php echo isset($ExpenseID)?$ExpenseID:''; ?>">
+                                                                    <input type="hidden" name="EquityID" id="EquityID" value="<?php echo isset($EquityID)?$EquityID:''; ?>">
+                                                                    <input type="hidden" name="Type" id="Type" value="<?php echo isset($Type)?$Type:''; ?>">
 
                                                                     <button class="btn btn-primary  btn-rounded btn-block btn-anim"><i class="fa fa-check-square"></i><span class="btn-text"><?php echo ucfirst($mode); ?> </span></button>
                                                                 </div>

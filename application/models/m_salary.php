@@ -17,14 +17,15 @@
 			$SalaryDate	    =	date('Y-m-d',strtotime($data['SalaryDate']));;
 			$StaffID	    =	$data['StaffID'];
             $ReferenceNo	=	!empty($data['ReferenceNo'])?$data['ReferenceNo']:'';
-			$Amount	        =	!empty($data['Amount'])?$data['Amount']:0;
+            $PaymentAccountID	  =	$data['PaymentAccountID'];
+            $Amount	        =	!empty($data['Amount'])?$data['Amount']:0;
             $Description	=	!empty($data['Description'])?$data['Description']:'';
 
             $array		=	array('SalaryDate'=>$SalaryDate,'StaffID'=>$StaffID,'ReferenceNo'=>$ReferenceNo,'Amount'=>$Amount,'Description'=>$Description);
 			$result 	=	$this->db->insert('salary',$array);
             $SalaryID 	=	$this->db->insert_id();
 
-            $payarray 		=	array('Type'=>'given','PaymentTypeID'=>4,'PaymentDate'=>$SalaryDate,'ReferenceNo'=>$ReferenceNo,'SalaryID'=>$SalaryID,'Amount'=>$Amount,'StaffID'=>$StaffID);
+            $payarray 		=	array('Type'=>'given','PaymentTypeID'=>4,'PaymentDate'=>$SalaryDate,'ReferenceNo'=>$ReferenceNo,'SalaryID'=>$SalaryID,'Amount'=>$Amount,'StaffID'=>$StaffID,'PaymentAccountID'=>$PaymentAccountID);
             $this->db->insert('payment',$payarray);
 
 			
@@ -37,6 +38,7 @@
             $SalaryDate	    =	date('Y-m-d',strtotime($data['SalaryDate']));;
             $StaffID	    =	$data['StaffID'];
             $ReferenceNo	=	!empty($data['ReferenceNo'])?$data['ReferenceNo']:'';
+            $PaymentAccountID	  =	$data['PaymentAccountID'];
             $Amount	        =	!empty($data['Amount'])?$data['Amount']:0;
             $Description	=	!empty($data['Description'])?$data['Description']:'';
 
@@ -44,7 +46,7 @@
             $this->db->where('SalaryID',$SalaryID);
 			$result		=	$this->db->update('salary',$array);
 
-            $payarray 		=	array('Type'=>'given','PaymentTypeID'=>4,'PaymentDate'=>$SalaryDate,'ReferenceNo'=>$ReferenceNo,'SalaryID'=>$SalaryID,'Amount'=>$Amount,'StaffID'=>$StaffID);
+            $payarray 		=	array('Type'=>'given','PaymentTypeID'=>4,'PaymentDate'=>$SalaryDate,'ReferenceNo'=>$ReferenceNo,'SalaryID'=>$SalaryID,'Amount'=>$Amount,'StaffID'=>$StaffID,'PaymentAccountID'=>$PaymentAccountID);
             $this->db->where('SalaryID',$SalaryID);
             $this->db->update('payment',$payarray);
 
@@ -53,9 +55,11 @@
 		
 		public function view()
 		{
-            $this->db->select('S.SalaryID,S.StaffID,S.ReferenceNo,S.SalaryDate,S.Amount,A.StaffName');
+            $this->db->select('S.SalaryID,S.StaffID,S.ReferenceNo,S.SalaryDate,S.Amount,A.StaffName,B.PaymentAccountName');
             $this->db->from('salary S');
             $this->db->join('staff A','S.StaffID = A.StaffID','left');
+            $this->db->join('payment P','S.SalaryID = P.SalaryID','left');
+            $this->db->join('payment_account B','B.PaymentAccountID = P.PaymentAccountID','left');
 			$this->db->order_by('S.SalaryID','DESC');
 			$query	=	$this->db->get();
 			$result	=	$query->result_array();
@@ -77,10 +81,11 @@
 
 		public function view_single($SalaryID)
 		{
-            $this->db->select('S.SalaryID,S.StaffID,S.ReferenceNo,S.SalaryDate,S.Amount,A.StaffName,S.Description');
+            $this->db->select('S.SalaryID,S.StaffID,S.ReferenceNo,S.SalaryDate,S.Amount,A.StaffName,S.Description,P.PaymentAccountID');
 			$this->db->from('salary S');
 			$this->db->join('staff A','S.StaffID = A.StaffID','left');
-			$this->db->where('SalaryID',$SalaryID);
+            $this->db->join('payment P','S.SalaryID = P.SalaryID','left');
+			$this->db->where('S.SalaryID',$SalaryID);
 			$query	=	$this->db->get();
 			$result	=	$query->row_array();
 			return($result);
@@ -94,6 +99,15 @@
 			$result =	$query->result_array();
 			return($result);
 		}
+
+        function view_payment_accounts()
+        {
+            $this->db->select('PaymentAccountID,PaymentAccountName');
+            $this->db->from('payment_account');
+            $query 	=	$this->db->get();
+            $result =	$query->result_array();
+            return($result);
+        }
 
 	}
 	

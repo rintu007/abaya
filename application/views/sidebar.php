@@ -256,6 +256,25 @@
 						<div class="pull-left"><i class="fa fa-medkit mr-20"></i><span class="right-nav-text">Manufacture</span></div><div class="clearfix"></div></a>
 				</li>
 
+                <li>
+                    <a href="javascript:void(0);" data-toggle="collapse" data-target="#accounts_dr" <?php echo ($PageActive == 'accounts')?'class="active-page"':'';?> >
+                        <div class="pull-left"><i class="fa fa-book mr-20"></i><span class="right-nav-text">Accounts</span></div><div class="pull-right">
+                            <i class="zmdi zmdi-caret-down"></i></div><div class="clearfix"></div></a>
+                    <ul id="accounts_dr" class="collapse collapse-level-1">
+                        <li>
+                            <a href="<?php echo base_url().'accounts';?>" <?php echo ($SubActive == 'list_accounts')?'class="active-page"':'';?>>
+                               Account List</a>
+                        </li>
+                        <li>
+                            <a href="<?php echo base_url().'accounts/transfer_list';?>" <?php echo ($SubActive == 'transfer')?'class="active-page"':'';?>>
+                               Tranfer</a>
+                        </li>
+
+
+
+                    </ul>
+                </li>
+
 				
 
 
@@ -276,9 +295,15 @@
 					<i class="zmdi zmdi-caret-down"></i></div><div class="clearfix"></div></a>
 					<ul id="StockDr" class="collapse collapse-level-1">
 						<li>
-							<a href="<?php echo base_url().'report/stock_list';?>" <?php echo ($SubActive == 'stock_list')?'class="active-page"':'';?>>
-							List Stock</a>
+							<a href="<?php echo base_url().'report/trial_balance';?>" <?php echo ($SubActive == 'trial_balance')?'class="active-page"':'';?>>
+							Trial Balance</a>
 						</li>
+
+
+                        <li>
+                            <a href="<?php echo base_url().'report/stock_list';?>" <?php echo ($SubActive == 'stock_list')?'class="active-page"':'';?>>
+                                List Stock</a>
+                        </li>
 						
 
 					</ul>

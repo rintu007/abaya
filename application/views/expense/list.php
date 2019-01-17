@@ -57,9 +57,9 @@
 				<!-- Title -->
 				<div class="row heading-bg">
 					<div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
-					  <a href="<?php echo base_url().'product?view=grid'; ?>">
+
 							<div class="pull-left"><i class="fa  fa-th mr-5"></i><span class="right-nav-text">Expense</span></div>
-						</a>
+
 					</div>
 					<!-- Breadcrumb -->
 					<div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
@@ -95,7 +95,9 @@
 												  <tr>
 													<th>Date</th>
 													<th>Type</th>
-													<th>Amount</th>
+                                                      <th>Account</th>
+
+                                                      <th>Amount</th>
 
 													<th class="text-nowrap">Action</th>
 												  </tr>
@@ -110,7 +112,10 @@
 													<td><?php echo date('d-m-Y',strtotime($item['ExpenseDate'])); ?></td>
 													<td><?php echo $item['ExpenseCategoryName']; ?></td>
 
-													<td><?php echo number_format($item['Amount'],2); ?></td>
+                                                      <td><?php echo$item['PaymentAccountName']; ?></td>
+
+
+                                                      <td><?php echo number_format($item['Amount'],2); ?></td>
 
 
 													<td class="text-nowrap">

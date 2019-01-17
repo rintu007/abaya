@@ -94,6 +94,38 @@
 			$result	=	$query->result_array();
 			return($result);
 		}
+
+        function view_balance($PaymentAccountID){
+            $this->db->select('sum(Amount) as Total');
+            $this->db->from('payment');
+            $this->db->where('PaymentAccountID',$PaymentAccountID);
+            $this->db->where('Type','received');
+            $this->db->group_by('PaymentAccountID');
+            $query = $this->db->get();
+            $rec    = $query->row_array();
+
+            $this->db->select('sum(Amount) as Total');
+            $this->db->from('payment');
+            $this->db->where('PaymentAccountID',$PaymentAccountID);
+            $this->db->where('Type','given');
+            $this->db->group_by('PaymentAccountID');
+            $query2 = $this->db->get();
+            $giv    = $query2->row_array();
+
+
+            return($rec['Total']-$giv['Total']);
+        }
+
+        function payment_type_amount($PaymentTypeID,$type){
+            $this->db->select('sum(Amount) as Total');
+            $this->db->from('payment');
+            $this->db->where('PaymentTypeID',$PaymentTypeID);
+            $this->db->where('Type',$type);
+            $this->db->group_by('PaymentTypeID');
+            $query = $this->db->get();
+            $rec    = $query->row_array();
+            return($rec['Total']);
+        }
 		
 	}
 	
